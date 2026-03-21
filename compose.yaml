@@ -1,0 +1,57 @@
+name: trading-system
+
+services:
+  db:
+    container_name: trading-postgres
+    hostname: postgres
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      - 'POSTGRES_DB=trading-system'
+      - 'POSTGRES_USER=${POSTGRES_USER}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+    ports:
+      - 5432:5432
+    volumes:
+      - trading_db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d trading-system -U $${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 60s
+      retries: 5
+      start_period: 30s
+  
+  trading-bot:
+    container_name: trading-bot
+    restart: unless-stopped
+    build: trading-bot/.
+
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+  backend:
+    container_name: trading-backend
+    restart: unless-stopped
+    build: backend/.
+
+    depends_on:
+      - db
+      - trading-bot
+    ports:
+      - 8081:8080
+    
+  frontend: 
+    container_name: trading-frontend
+    restart: unless-stopped
+    build: frontend/.
+
+    depends_on:
+      - backend
+
+    ports:
+      - 5173:5173
+
+volumes: 
+  trading_db:

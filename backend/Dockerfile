@@ -16,8 +16,8 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/target/*.jar trading_bot.jar
+COPY --from=builder /app/target/*.jar trading_backend.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "trading_bot.jar"]
+CMD ["java", "-jar", "trading_backend.jar"]

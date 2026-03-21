@@ -1,0 +1,31 @@
+# Build artifacts
+target
+*.jar
+*.war
+*.class
+
+# IDE files
+.git
+.gitignore
+.gitattributes
+.DS_Store
+.idea
+.vscode
+*.iml
+
+# Environment files - NEVER include in image
+.env
+.env.*
+
+# Documentation
+coverage
+Dockerfile
+.dockerignore
+*.md
+
+# Logs
+*.log
+logs/
+
+# Test files
+src/test/

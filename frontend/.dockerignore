@@ -1,0 +1,28 @@
+# Build output
+node_modules
+dist
+dist-ssr
+
+# Git
+.git
+.gitignore
+.DS_Store
+
+# IDE
+.idea
+.vscode
+
+# Logs
+*.log
+npm-debug.log*
+coverage
+
+# Local environment files (keep .env, .env.development, .env.production)
+.env.local
+.env.*.local
+
+# Documentation
+Dockerfile
+.dockerignore
+*.md
+.eslintcache
