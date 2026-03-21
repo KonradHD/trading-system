@@ -1,4 +1,4 @@
-package com.tradingsystem.trading_bot.config;
+package com.tradingsystem.trading_bot.components;
 
 import java.net.URI;
 import java.net.http.HttpClient;

@@ -1,0 +1,50 @@
+package com.tradingsystem.trading_bot.utils;
+
+import java.net.URI;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BinanceAPIUrlBuilder {
+
+    public static String STREAM_STRING;
+    public static String HTTP_STRING;
+
+    @Value("${binance.websocket.stream.url}")
+    public void setStreamString(String value){
+        STREAM_STRING = value;
+    }
+
+    @Value("${binance.http.url}")
+    public void setHttpString(String value){
+        HTTP_STRING = value;
+    }
+
+    public static URI rawStreamEndpoint(String streamName){
+        String endpointStr = new StringBuilder(STREAM_STRING).append("/ws/").append(streamName).append("@trade").toString();
+        return URI.create(endpointStr);
+    }
+
+
+    public static URI combinedStreamsEndpoint(String... streamNames){
+        StringBuilder builder = new StringBuilder(STREAM_STRING).append("/stream?streams=");
+        for (int i = 0; i < streamNames.length; i++){
+            builder.append(streamNames[i]).append("@trade");
+            if (i < streamNames.length - 1){
+                builder.append("/");
+            }
+        }
+        return URI.create(builder.toString());
+    }
+
+    public static URI klinesStreamEndpoint(String streamName, String interval){
+        String urlString = String.format("%s/ws/%s@kline_%s", STREAM_STRING, streamName, interval);
+        return URI.create(urlString);
+    }
+
+    public static URI httpEndpoint(String symbol, String interval, int limit){
+        String urlString = String.format("%s?symbol=%s&interval=%s&limit=%d", HTTP_STRING, symbol.toUpperCase(), interval, limit);
+        return URI.create(urlString);
+    }
+}
