@@ -1,16 +1,18 @@
 package com.tradingsystem.trading_bot.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
 import com.tradingsystem.trading_bot.dto.CandleDTO;
 import com.tradingsystem.trading_bot.model.MarketDataEntity;
 import com.tradingsystem.trading_bot.repository.MarketDataRepository;
 import com.tradingsystem.trading_bot.utils.MarketDataParser;
 import com.tradingsystem.trading_bot.utils.MarketDataType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor 
@@ -24,28 +26,29 @@ public class MarketDataService {
         MarketDataType dataType = parser.checkDataType(data);
 
         switch (dataType) {
-            case CANDLE_WEBSOCKET:
+            case CANDLE_WEBSOCKET -> {
                 CandleDTO candle = parser.parseWebSocketCandle(data);
                 if (candle.getIsClosed()) {
                     System.out.println("New candle: " + candle.toString());
                     saveCandle(candle); 
                 }
-                break;
+            }
 
-            case CANDLE_HTTP:
+            case CANDLE_HTTP -> {
                 List<CandleDTO> candles = parser.parseHttpCandle(data, query);
-                saveAllCandles(candles); 
-                break;
+                System.out.println("Candles:" + candles);
+                saveAllCandles(candles);
+            }
 
-            case TICKER_WEBSOCKET:
-                break;
+            case OPEN_INTEREST -> System.out.println("Openinterest: " + data); // zapis do tabeli open_interest
+                    
+            case FUNDING_RATE -> System.out.println("Funding rate:" + data); // zapis do tabeli funding_rate
+                        
+            case TICKER_WEBSOCKET -> System.out.println("Ticker websocket: " + data);
 
-            case UNKNOWN:
-                System.err.println("Unknown data came from Binance API: " + data);
-                break;
+            case UNKNOWN -> System.err.println("Unknown data came from Binance API: " + data);
 
-            default:
-                throw new AssertionError();
+            default -> throw new AssertionError();
         }
     }
 

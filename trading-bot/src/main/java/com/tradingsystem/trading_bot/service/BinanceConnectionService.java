@@ -3,8 +3,8 @@ package com.tradingsystem.trading_bot.service;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.tradingsystem.trading_bot.components.BinanceDisposableHttpClient;
@@ -19,12 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class BinanceConnectionService implements CommandLineRunner{
     private final BinanceWebSocketClient socketClient;
     private final BinanceDisposableHttpClient disposableHttpClient;
+    private final List<BinanceScheduledHttpClient> httpClients;
     
-    @Qualifier("openInterestClient")
-    private final BinanceScheduledHttpClient openInterestClient;
+    // @Qualifier("openInterestClient")
+    // private final BinanceScheduledHttpClient openInterestClient;
     
-    @Qualifier("fundingRateClient")
-    private final BinanceScheduledHttpClient fundingRateClient;
+    // @Qualifier("fundingRateClient")
+    // private final BinanceScheduledHttpClient fundingRateClient;
     
     @Override
     public void run(String... args){
@@ -34,8 +35,15 @@ public class BinanceConnectionService implements CommandLineRunner{
         URI url = BinanceAPIUrlBuilder.klinesStreamEndpoint("btcusdt", "1m");
         URI url2 = BinanceAPIUrlBuilder.httpEndpoint("btcusdt", "1m", 100);
         socketClient.connect(url);
-        // disposableHttpClient.historicalCandles(url2);
+        disposableHttpClient.historicalCandles(url2);
         
-        openInterestClient.cyclicData();
+    }
+
+    @Scheduled(fixedRateString = "${cyclic.http.time}")
+    public void triggerHttpDataFetch() {
+        System.out.println("--- cyclic HTTP requests ---");
+        for(BinanceScheduledHttpClient client : httpClients) {
+            client.fetchData();
+        }
     }
 }

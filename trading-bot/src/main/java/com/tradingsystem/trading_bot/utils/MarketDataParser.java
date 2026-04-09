@@ -2,12 +2,14 @@ package com.tradingsystem.trading_bot.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.tradingsystem.trading_bot.dto.CandleDTO;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tradingsystem.trading_bot.dto.CandleDTO;
 
 public class MarketDataParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final MarketDataResolver resolver = new MarketDataResolver();
 
     public CandleDTO parseWebSocketCandle(String data) {
         try {
@@ -36,9 +38,13 @@ public class MarketDataParser {
         List<CandleDTO> candles = new ArrayList<>();
         try {
             JsonNode jsonArray = objectMapper.readTree(content);
-            for (JsonNode node : jsonArray) { // zmienić na to co było wcześniej
+            for (JsonNode node : jsonArray) {
                 CandleDTO candle = new CandleDTO();
-                candle.setSymbol("BTCUSDT"); 
+                String symbol = extractQueryParam(query, "symbol");
+                String interval = extractQueryParam(query, "interval");
+                
+                candle.setSymbol(symbol);
+                candle.setInterval(interval);
                 candle.setIsClosed(true);
                 candle.setOpenTime(node.get(0).asLong());
                 candle.setOpen(node.get(1).asDouble());
@@ -59,26 +65,48 @@ public class MarketDataParser {
         try {
             JsonNode node = objectMapper.readTree(rawData);
             if (node.isArray()) {
+                node = node.get(0);
+            }
+
+            if(resolver.checkCandleHttp(node)){ 
                 return MarketDataType.CANDLE_HTTP;
             }
 
-            JsonNode eventNodeInterest = node.path("openInterest");
-            if (eventNodeInterest != null){ 
-                return MarketDataType.OPEN_INTEREST;
-            }
-
-            JsonNode eventNodeRate = node.path("fundingRate");
-            if (eventNodeRate != null){ 
+            if (resolver.checkFundingRate(node)){ 
                 return MarketDataType.FUNDING_RATE;
             }
 
-            JsonNode eventNodeCandle = node.path("e");
-            if (eventNodeCandle != null && eventNodeCandle.asText().equals("kline")) { 
+            if (resolver.checkCandleWebsocket(node)) { 
                 return MarketDataType.CANDLE_WEBSOCKET;
             }
+
+            if(resolver.checkOpenInterest(node)){
+                return MarketDataType.OPEN_INTEREST;
+            }
+
             return MarketDataType.UNKNOWN;
         } catch (Exception e) {
             return MarketDataType.UNKNOWN;
         }
+    }
+
+    private String extractQueryParam(String query, String paramName) {
+        String searchFor = paramName + "=";
+        int startIndex = query.indexOf(searchFor);
+        
+        if (startIndex == -1) {
+            return "UNKNOWN"; // Jeśli nie ma parametru w URL
+        }
+        
+        startIndex += searchFor.length(); // Przesuwamy indeks za znak "="
+        
+        int endIndex = query.indexOf("&", startIndex);
+        if (endIndex == -1) {
+            // Jeśli nie ma '&', to znaczy, że to ostatni parametr w stringu.
+            // Bierzemy wszystko do samego końca.
+            endIndex = query.length();
+        }
+        
+        return query.substring(startIndex, endIndex);
     }
 }
