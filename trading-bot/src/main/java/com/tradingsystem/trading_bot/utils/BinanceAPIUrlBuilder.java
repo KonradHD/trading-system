@@ -10,15 +10,21 @@ public class BinanceAPIUrlBuilder {
 
     public static String STREAM_STRING;
     public static String HTTP_STRING;
+    public static String HTTP_FUTURES_STRING;
 
     @Value("${binance.websocket.stream.url}")
     public void setStreamString(String value){
         STREAM_STRING = value;
     }
 
-    @Value("${binance.http.url}")
+    @Value("${binance.http.klines.url}")
     public void setHttpString(String value){
         HTTP_STRING = value;
+    }
+
+    @Value("${binance.http.futures.url}")
+    public void setHttpFuturesString(String value){
+        HTTP_FUTURES_STRING = value;
     }
 
     public static URI rawStreamEndpoint(String streamName){
@@ -45,6 +51,11 @@ public class BinanceAPIUrlBuilder {
 
     public static URI httpEndpoint(String symbol, String interval, int limit){
         String urlString = String.format("%s?symbol=%s&interval=%s&limit=%d", HTTP_STRING, symbol.toUpperCase(), interval, limit);
+        return URI.create(urlString);
+    }
+
+    public static URI httpFuturesEndpoint(String type, String symbol){
+        String urlString = String.format("%s%s?symbol=%s", HTTP_FUTURES_STRING, type, symbol.toUpperCase());
         return URI.create(urlString);
     }
 }

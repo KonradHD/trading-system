@@ -36,7 +36,7 @@ public class MarketDataParser {
         List<CandleDTO> candles = new ArrayList<>();
         try {
             JsonNode jsonArray = objectMapper.readTree(content);
-            for (JsonNode node : jsonArray) {
+            for (JsonNode node : jsonArray) { // zmienić na to co było wcześniej
                 CandleDTO candle = new CandleDTO();
                 candle.setSymbol("BTCUSDT"); 
                 candle.setIsClosed(true);
@@ -61,8 +61,19 @@ public class MarketDataParser {
             if (node.isArray()) {
                 return MarketDataType.CANDLE_HTTP;
             }
-            JsonNode eventNode = node.path("e");
-            if (eventNode.asText().equals("kline")) { 
+
+            JsonNode eventNodeInterest = node.path("openInterest");
+            if (eventNodeInterest != null){ 
+                return MarketDataType.OPEN_INTEREST;
+            }
+
+            JsonNode eventNodeRate = node.path("fundingRate");
+            if (eventNodeRate != null){ 
+                return MarketDataType.FUNDING_RATE;
+            }
+
+            JsonNode eventNodeCandle = node.path("e");
+            if (eventNodeCandle != null && eventNodeCandle.asText().equals("kline")) { 
                 return MarketDataType.CANDLE_WEBSOCKET;
             }
             return MarketDataType.UNKNOWN;

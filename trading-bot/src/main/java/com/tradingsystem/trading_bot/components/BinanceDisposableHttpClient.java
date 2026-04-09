@@ -5,15 +5,17 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.tradingsystem.trading_bot.service.MarketDataService;
+import com.tradingsystem.trading_bot.utils.BinanceAPIUrlBuilder;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class BinanceHttpClient {
+public class BinanceDisposableHttpClient {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final MarketDataService marketDataService;
@@ -35,4 +37,5 @@ public class BinanceHttpClient {
             System.out.println("Error while receiving candles data: " + e.toString());
         }
     }
+
 }
