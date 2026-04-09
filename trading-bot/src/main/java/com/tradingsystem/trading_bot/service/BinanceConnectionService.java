@@ -21,19 +21,13 @@ public class BinanceConnectionService implements CommandLineRunner{
     private final BinanceDisposableHttpClient disposableHttpClient;
     private final List<BinanceScheduledHttpClient> httpClients;
     
-    // @Qualifier("openInterestClient")
-    // private final BinanceScheduledHttpClient openInterestClient;
-    
-    // @Qualifier("fundingRateClient")
-    // private final BinanceScheduledHttpClient fundingRateClient;
-    
     @Override
     public void run(String... args){
         System.out.println("Binance connection service is starting...");
         // URI url = BinanceAPIUrlBuilder.rawStreamsEndpoint("btcusdt");
         // URI url = BinanceAPIUrlBuilder.combinedStreamsEndpoint("btcusdt", "ethusdt");
-        URI url = BinanceAPIUrlBuilder.klinesStreamEndpoint("btcusdt", "1m");
-        URI url2 = BinanceAPIUrlBuilder.httpEndpoint("btcusdt", "1m", 100);
+        URI url = BinanceAPIUrlBuilder.streamCandleEndpoint("btcusdt", "1m");
+        URI url2 = BinanceAPIUrlBuilder.httpCandleEndpoint("btcusdt", "1m", 100);
         socketClient.connect(url);
         disposableHttpClient.historicalCandles(url2);
         

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class BinanceAPIUrlBuilder {
 
     public static String STREAM_STRING;
-    public static String HTTP_STRING;
+    public static String HTTP_CANDLE_STRING;
     public static String HTTP_FUTURES_STRING;
 
     @Value("${binance.websocket.stream.url}")
@@ -19,7 +19,7 @@ public class BinanceAPIUrlBuilder {
 
     @Value("${binance.http.klines.url}")
     public void setHttpString(String value){
-        HTTP_STRING = value;
+        HTTP_CANDLE_STRING = value;
     }
 
     @Value("${binance.http.futures.url}")
@@ -44,13 +44,13 @@ public class BinanceAPIUrlBuilder {
         return URI.create(builder.toString());
     }
 
-    public static URI klinesStreamEndpoint(String streamName, String interval){
+    public static URI streamCandleEndpoint(String streamName, String interval){
         String urlString = String.format("%s/ws/%s@kline_%s", STREAM_STRING, streamName, interval);
         return URI.create(urlString);
     }
 
-    public static URI httpEndpoint(String symbol, String interval, int limit){
-        String urlString = String.format("%s?symbol=%s&interval=%s&limit=%d", HTTP_STRING, symbol.toUpperCase(), interval, limit);
+    public static URI httpCandleEndpoint(String symbol, String interval, int limit){
+        String urlString = String.format("%s?symbol=%s&interval=%s&limit=%d", HTTP_CANDLE_STRING, symbol.toUpperCase(), interval, limit);
         return URI.create(urlString);
     }
 
