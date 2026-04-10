@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import com.tradingsystem.trading_bot.service.MarketDataService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BinanceWebSocketClient implements WebSocket.Listener{
@@ -18,7 +20,7 @@ public class BinanceWebSocketClient implements WebSocket.Listener{
     private final MarketDataService marketDataService;
 
     public void connect(URI url){
-        System.out.println("Opening data stream...");
+        log.info("Opening data stream...");
         HttpClient.newHttpClient()
             .newWebSocketBuilder()
             .buildAsync(url, this);
@@ -26,13 +28,12 @@ public class BinanceWebSocketClient implements WebSocket.Listener{
 
     @Override
     public void onOpen(WebSocket socket){
-        System.out.println("Websocket connection established. Listening for prices...");
+        log.info("Websocket connection established. Listening for prices...");
         socket.request(1);
     }
 
     @Override
     public CompletionStage<?> onText(WebSocket socket, CharSequence data, boolean last){
-        // System.out.println("Websocket thread: " + Thread.currentThread().getName());
         marketDataService.processRawMarketData(data.toString(), "websocket");
         socket.request(1); // asking for next message
         return null;
@@ -40,12 +41,12 @@ public class BinanceWebSocketClient implements WebSocket.Listener{
 
     @Override
     public void onError(WebSocket webSocket, Throwable error) {
-        System.err.println("Binance connection error: " + error.getMessage());
+        log.error("Binance websocket connection error: " + error.getMessage());
     }
 
     @Override
     public CompletionStage<?> onClose(WebSocket webSocket, int statusCode, String reason) {
-        System.out.println("Binance disconected. Reason: " + reason);
+        log.warn("Binance disconected. Reason: " + reason);
         return null;
     }
 }

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tradingsystem.trading_bot.dto.CandleDTO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MarketDataParser {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final MarketDataResolver resolver = new MarketDataResolver();
@@ -29,7 +32,7 @@ public class MarketDataParser {
                     .volume(k.get("v").asDouble())
                     .build();
         } catch (Exception e) {
-            System.err.println("Error parsing WebSocket candle: " + e.getMessage());
+            log.error("Error parsing WebSocket candle: " + e.getMessage());
             return null;
         }
     }
@@ -56,7 +59,7 @@ public class MarketDataParser {
                 candles.add(candle);
             }
         } catch (Exception e) {
-            System.err.println("Error parsing HTTP candles: " + e.getMessage());
+            log.error("Error parsing HTTP candles: " + e.getMessage());
         }
         return candles;
     }

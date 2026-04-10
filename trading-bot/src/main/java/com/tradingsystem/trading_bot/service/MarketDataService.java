@@ -13,7 +13,9 @@ import com.tradingsystem.trading_bot.utils.MarketDataParser;
 import com.tradingsystem.trading_bot.utils.MarketDataType;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor 
 public class MarketDataService {
@@ -29,26 +31,35 @@ public class MarketDataService {
             case CANDLE_WEBSOCKET -> {
                 CandleDTO candle = parser.parseWebSocketCandle(data);
                 if (candle.getIsClosed()) {
-                    System.out.println("New candle: " + candle.toString());
+                    log.info("New websocket candle was received.");
                     saveCandle(candle); 
                 }
             }
 
             case CANDLE_HTTP -> {
                 List<CandleDTO> candles = parser.parseHttpCandle(data, query);
-                System.out.println("Candles:" + candles);
+                log.info("New candle list was received.");
                 saveAllCandles(candles);
             }
 
-            case OPEN_INTEREST -> System.out.println("Openinterest: " + data); // zapis do tabeli open_interest
-                    
-            case FUNDING_RATE -> System.out.println("Funding rate:" + data); // zapis do tabeli funding_rate
+            case OPEN_INTEREST -> {
+                log.info("New open interest was received.");
+                // TODO: zapis do tabeli open_interest
+            }
+
+            case FUNDING_RATE -> {
+                log.info("New funding rate was received.");
+                // TODO: zapis do tabeli funding_rate
+            }
                         
-            case TICKER_WEBSOCKET -> System.out.println("Ticker websocket: " + data);
+            case TICKER_WEBSOCKET -> {
+                log.info("New websocket ticker was received.");
+                // to się raczej nie przyda
+            }
 
-            case UNKNOWN -> System.err.println("Unknown data came from Binance API: " + data);
+            case UNKNOWN -> log.warn("Unknown data came from Binance API: " + data);
 
-            default -> throw new AssertionError();
+            default -> log.error("None of data type suits icoming data.");
         }
     }
 

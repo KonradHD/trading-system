@@ -10,7 +10,9 @@ import com.tradingsystem.trading_bot.service.MarketDataService;
 import com.tradingsystem.trading_bot.utils.BinanceAPIUrlBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BinanceScheduledHttpClient{
     private final HttpClient client = HttpClient.newHttpClient();
@@ -39,7 +41,7 @@ public class BinanceScheduledHttpClient{
             HttpResponse<String> response = client.send(req, HttpResponse.BodyHandlers.ofString());
             marketDataService.processRawMarketData(response.body(), query);
         }catch(Exception e){
-            System.out.println("Error while receiving futures data: " + e.toString());
+            log.error("Error while receiving futures data: " + e.toString());
         }
     }
 }

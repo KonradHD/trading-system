@@ -8,18 +8,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class BinanceAPIUrlBuilder {
 
-    public static String STREAM_STRING;
-    public static String HTTP_CANDLE_STRING;
-    public static String HTTP_FUTURES_STRING;
+    private static String BINANCE_BASE_URL; 
+    private static String STREAM_STRING;
+    private static String CANDLE_PATH;
+    private static String HTTP_FUTURES_STRING;
+
+    @Value("${binance.test.base.url}")
+    public void setBaseUrl(String value){
+        BINANCE_BASE_URL = value;
+    }
 
     @Value("${binance.websocket.stream.url}")
     public void setStreamString(String value){
         STREAM_STRING = value;
     }
 
-    @Value("${binance.http.klines.url}")
+    @Value("${binance.path.klines}")
     public void setHttpString(String value){
-        HTTP_CANDLE_STRING = value;
+        CANDLE_PATH = value;
     }
 
     @Value("${binance.http.futures.url}")
@@ -50,7 +56,7 @@ public class BinanceAPIUrlBuilder {
     }
 
     public static URI httpCandleEndpoint(String symbol, String interval, int limit){
-        String urlString = String.format("%s?symbol=%s&interval=%s&limit=%d", HTTP_CANDLE_STRING, symbol.toUpperCase(), interval, limit);
+        String urlString = String.format("%s%s?symbol=%s&interval=%s&limit=%d", BINANCE_BASE_URL, CANDLE_PATH, symbol.toUpperCase(), interval, limit);
         return URI.create(urlString);
     }
 
