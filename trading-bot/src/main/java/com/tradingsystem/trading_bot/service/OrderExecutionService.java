@@ -66,10 +66,11 @@ public class OrderExecutionService {
 
         try{
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // TODO: Obsłużyć odmowe transakcji 
             // TODO: Zapisać transakcje do bazy
             log.info("Transaction response from binance: " + response.body());
         }catch(Exception e ){
-            e.printStackTrace();
+            log.error("Exception occurred while making a transaction: {}", e);
         }
         
     }
