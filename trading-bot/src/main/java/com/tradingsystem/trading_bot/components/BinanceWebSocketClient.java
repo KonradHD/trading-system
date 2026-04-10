@@ -7,7 +7,7 @@ import java.util.concurrent.CompletionStage;
 
 import org.springframework.stereotype.Component;
 
-import com.tradingsystem.trading_bot.service.MarketDataService;
+import com.tradingsystem.trading_bot.service.MarketDataRouter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class BinanceWebSocketClient implements WebSocket.Listener{
 
-    private final MarketDataService marketDataService;
+    private final MarketDataRouter marketDataService;
 
     public void connect(URI url){
         log.info("Opening data stream...");

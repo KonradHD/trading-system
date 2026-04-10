@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "market_data")
+@Table(name = "candle_data")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class MarketDataEntity {
+public class CandleDataEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

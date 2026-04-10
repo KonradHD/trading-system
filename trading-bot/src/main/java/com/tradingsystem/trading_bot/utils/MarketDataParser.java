@@ -1,11 +1,14 @@
 package com.tradingsystem.trading_bot.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tradingsystem.trading_bot.dto.CandleDTO;
+import com.tradingsystem.trading_bot.dto.FundingRateDTO;
+import com.tradingsystem.trading_bot.dto.OpenInterestDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +62,7 @@ public class MarketDataParser {
                 candles.add(candle);
             }
         } catch (Exception e) {
-            log.error("Error parsing HTTP candles: " + e.getMessage());
+            log.error("Error parsing HTTP candles: {}", e.getMessage());
         }
         return candles;
     }
@@ -98,18 +101,48 @@ public class MarketDataParser {
         int startIndex = query.indexOf(searchFor);
         
         if (startIndex == -1) {
-            return "UNKNOWN"; // Jeśli nie ma parametru w URL
+            return "UNKNOWN";
         }
         
-        startIndex += searchFor.length(); // Przesuwamy indeks za znak "="
+        startIndex += searchFor.length();
         
         int endIndex = query.indexOf("&", startIndex);
         if (endIndex == -1) {
-            // Jeśli nie ma '&', to znaczy, że to ostatni parametr w stringu.
-            // Bierzemy wszystko do samego końca.
             endIndex = query.length();
         }
         
         return query.substring(startIndex, endIndex);
+    }
+
+
+    public OpenInterestDTO parseOpenInterest(String content){
+        try{
+            OpenInterestDTO dto = objectMapper.readValue(content, OpenInterestDTO.class);
+            return dto;
+        }catch(Exception e){
+            log.error("Exception occurred while parsing open interest data: {}", e);
+            return null;
+        }
+    }
+
+    public List<FundingRateDTO> parseFundingRate(String content){
+        List<FundingRateDTO> rates = new ArrayList<>();
+        try {
+            JsonNode node = objectMapper.readTree(content);
+            if(node.isArray()){
+                for(JsonNode event : node){
+                    FundingRateDTO dto = objectMapper.treeToValue(event, FundingRateDTO.class);
+                    rates.add(dto);
+                }
+            }else{
+                FundingRateDTO dto = objectMapper.treeToValue(node, FundingRateDTO.class);
+                rates.add(dto);
+            }
+            return rates;
+
+        } catch (Exception e) {
+            log.error("Exception occurred while parsing funding rate data: {}", e);
+            return Collections.emptyList();
+        }
     }
 }

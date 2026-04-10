@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 
 import org.springframework.stereotype.Component;
 
-import com.tradingsystem.trading_bot.service.MarketDataService;
+import com.tradingsystem.trading_bot.service.MarketDataRouter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BinanceDisposableHttpClient {
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    private final MarketDataService marketDataService;
+    private final MarketDataRouter marketDataService;
 
     public void historicalCandles(URI url){
         log.info("Connecting to historical data using http...");

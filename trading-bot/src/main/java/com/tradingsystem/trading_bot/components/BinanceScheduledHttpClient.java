@@ -6,7 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-import com.tradingsystem.trading_bot.service.MarketDataService;
+import com.tradingsystem.trading_bot.service.MarketDataRouter;
 import com.tradingsystem.trading_bot.utils.BinanceAPIUrlBuilder;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BinanceScheduledHttpClient{
     private final HttpClient client = HttpClient.newHttpClient();
 
-    private final MarketDataService marketDataService;
+    private final MarketDataRouter marketDataService;
     private final String dataType;
     private final List<String> symbols;
 
