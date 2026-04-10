@@ -35,19 +35,19 @@ public class BinanceConnectionService implements CommandLineRunner{
         // URI url = BinanceAPIUrlBuilder.combinedStreamsEndpoint("btcusdt", "ethusdt");
         URI url = BinanceAPIUrlBuilder.streamCandleEndpoint("btcusdt", "1m");
         URI url2 = BinanceAPIUrlBuilder.httpCandleEndpoint("btcusdt", "1m", 100);
-        socketClient.connect(url);
-        disposableHttpClient.historicalCandles(url2);
+        // socketClient.connect(url);
+        // disposableHttpClient.historicalCandles(url2);
         
-        // orderService.checkBalance();
+        orderService.checkBalance();
 
         TradeSignalEvent signal = new TradeSignalEvent(
             MarketActions.BUY,
             "btcusdt",
-            BigDecimal.valueOf(0.01),
+            BigDecimal.valueOf(0.0001),
             "Test API",
             Instant.now()
         );
-        // orderService.tradeExecution(signal);
+        orderService.tradeExecution(signal);
     }
 
     @Scheduled(fixedRateString = "${cyclic.http.time}")

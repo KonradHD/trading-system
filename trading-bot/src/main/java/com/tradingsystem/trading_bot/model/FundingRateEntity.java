@@ -8,12 +8,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "funding_rate")
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class FundingRateEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

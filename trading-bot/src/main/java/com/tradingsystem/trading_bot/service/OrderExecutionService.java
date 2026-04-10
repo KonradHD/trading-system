@@ -12,10 +12,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.tradingsystem.trading_bot.dto.TransactionDTO;
 import com.tradingsystem.trading_bot.event.TradeSignalEvent;
 import com.tradingsystem.trading_bot.utils.MarketActions;
 import com.tradingsystem.trading_bot.utils.SignatureGenerator;
+import com.tradingsystem.trading_bot.utils.parsing.TransactionsParser;
 
+import jakarta.transaction.Transaction;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderExecutionService {
     
     private final HttpClient client = HttpClient.newHttpClient();
+    private final TransactionsParser parser = new TransactionsParser();
+    private final TransactionService transactionService;
     private final SignatureGenerator signatureGenerator;
     private final String baseBinanceUrl;
     private final String orderPath;
@@ -31,6 +36,7 @@ public class OrderExecutionService {
 
 
     public OrderExecutionService(
+        TransactionService transactionService,
         @Qualifier("hmacSha256Generator") SignatureGenerator signatureGenerator,
         @Value("${binance.test.base.url}") String baseUrl,
         @Value("${binance.path.order}") String orderPath,
@@ -42,6 +48,7 @@ public class OrderExecutionService {
         this.orderPath = orderPath;
         this.balancePath = balancePath;
         this.apiKey = apiKey;
+        this.transactionService = transactionService;
     }
     
     @Async
@@ -66,11 +73,21 @@ public class OrderExecutionService {
 
         try{
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200){
+                TransactionDTO transaction = parser.parseTransaction(response.body());
+                transactionService.saveTransaction(transaction);
+                log.info("Transaction was successfully conducted and saved.");
+                if(transaction.getStatus().equalsIgnoreCase("filled")){
+                    log.info("Transaction was filled");
+                    // TODO: Update portfel
+                }
+            }else{
+                log.warn("Transaction was rejected.");
+            }
             // TODO: Obsłużyć odmowe transakcji 
-            // TODO: Zapisać transakcje do bazy
-            log.info("Transaction response from binance: " + response.body());
+            // log.info("Transaction response from binance: " + response.body());
         }catch(Exception e ){
-            log.error("Exception occurred while making a transaction: {}", e);
+            log.error("Exception occurred while making a transaction: ", e);
         }
         
     }
@@ -98,7 +115,7 @@ public class OrderExecutionService {
                 log.error("Error response: {}" + response.body());
             }
         } catch (Exception e) {
-            log.error("Exception occurred during balance checking", e);
+            log.error("Exception occurred during balance checking: ", e);
         }
     }
 }
