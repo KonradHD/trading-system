@@ -1,0 +1,308 @@
+.signing-up {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    
+    padding: 2rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.signing-up h1 {
+    font-size: 2rem;
+    color: var(--text-main);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+
+.signing-up form {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+
+.role {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+
+.role label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    
+    transition: all 0.2s ease;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.role label:hover {
+    background-color: #f1f5f9;
+}
+
+.role label:has(input:checked) {
+    background-color: var(--primary-light);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.role label input {
+    display: none;
+}
+
+
+.personal-form,
+.contact-form,
+.credentials-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pesel-div {
+    margin-top: 20px;
+}
+
+
+.signing-up form input[type="text"],
+.signing-up form input[type="email"],
+.signing-up form input[type="password"],
+.signing-up form input[type="date"],
+.signing-up form input[type="tel"],
+.signing-up form input[type="number"],
+.signing-up form select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: #f8fafc;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    color: var(--text-main);
+    box-sizing: border-box;
+}
+
+.password-input {
+    margin-bottom: 0;
+}
+
+.signing-up form input:focus,
+.signing-up form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+
+.signing-up form h1 {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    margin-bottom: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+
+.signing-up button {
+    padding: 0.85rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    
+}
+
+
+.signing-up .delete-service-btn {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    background-color: #ef4444 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    line-height: 1;
+    margin: 0 !important;
+    
+}
+
+.signing-up .delete-service-btn:hover {
+    background-color: #dc2626 !important;
+}
+
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+
+#register-btn,
+.std-btn {
+    width: 100%;
+}
+
+
+.form-navigation button {
+    width: 100%;
+    
+    flex: 1;
+    margin-top: 0 !important;
+    
+}
+
+#register-btn {
+    background-color: var(--primary-color);
+    color: white;
+    margin-top: 1rem;
+}
+
+#register-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+#register-btn:disabled {
+    background-color: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#next-btn {
+    background-color: var(--primary-color);
+    color: white;
+    margin-top: 1rem;
+}
+
+#next-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+#prev-btn {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    margin-top: 0.5rem;
+}
+
+#prev-btn:hover {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+}
+
+
+p[style*="color: red"],
+.error-message {
+    background-color: #fef2f2;
+    color: #ef4444 !important;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid #fecaca;
+    font-size: 0.85rem !important;
+    display: flex !important;
+    
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+
+span.error-message {
+    display: inline-flex !important;
+    width: auto;
+}
+
+
+@media (max-width: 640px) {
+    .signing-up {
+        padding: 1rem;
+    }
+
+    .signing-up form {
+        padding: 1.5rem;
+    }
+
+    .role {
+        gap: 0.5rem;
+    }
+
+    .role label {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 4px;
+    color: #94a3b8;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    width: auto !important;
+    
+    height: auto !important;
+}
+
+.password-toggle-btn:hover {
+    color: var(--primary-color);
+    background: none !important;
+    
+}
