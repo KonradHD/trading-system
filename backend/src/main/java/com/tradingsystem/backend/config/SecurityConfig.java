@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.tradingsystem.backend.utils.TokenEncrypter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -16,6 +18,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public TokenEncrypter tokenEncrypter() {
+        return new TokenEncrypter();
     }
 
     @Bean

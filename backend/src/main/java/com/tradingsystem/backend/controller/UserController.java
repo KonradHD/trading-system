@@ -25,7 +25,7 @@ public class UserController {
     
     // tylko format "application/json"
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> signUp(@RequestBody @Valid UserRegistration request){
+    public ResponseEntity<UserResponse> signUp(@RequestBody @Valid UserRegistration request){
         log.info("Received user registration request: {}", request.login());
         UserResponse userResponse = userService.saveUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
