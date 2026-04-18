@@ -1,5 +1,7 @@
 package com.tradingsystem.trading_bot.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,5 +25,5 @@ public class FundingRateEntity{
     private String symbol;
     private Long timestamp;
     private Double fundingRate;
-    private Double price;
+    private BigDecimal price;
 }

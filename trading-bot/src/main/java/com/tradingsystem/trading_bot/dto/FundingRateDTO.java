@@ -1,5 +1,7 @@
 package com.tradingsystem.trading_bot.dto;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,6 +27,6 @@ public class FundingRateDTO {
     private Double fundingRate;
 
     @JsonProperty("markPrice")
-    private Double price;
+    private BigDecimal price;
     
 }

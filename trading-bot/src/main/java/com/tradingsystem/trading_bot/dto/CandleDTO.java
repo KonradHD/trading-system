@@ -1,5 +1,7 @@
 package com.tradingsystem.trading_bot.dto;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -24,16 +26,16 @@ public class CandleDTO {
     private Long closeTime;
 
     @JsonProperty("o")
-    private Double open;
+    private BigDecimal open;
 
     @JsonProperty("h")
-    private Double high;
+    private BigDecimal high;
 
     @JsonProperty("l")
-    private Double low;
+    private BigDecimal low;
 
     @JsonProperty("c")
-    private Double close;
+    private BigDecimal close;
 
     @JsonProperty("i")
     private String interval;

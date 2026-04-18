@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     address VARCHAR(255) NOT NULL,
     phone CHAR(9) NOT NULL CHECK(phone ~ '^[0-9]{9}$'),
     pesel CHAR(11) NOT NULL CHECK(pesel ~ '^[0-9]{11}$'),
-    CONSTRAINT fk_user_id_profiles FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_id_profiles FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT check_gender CHECK(gender in ('male', 'female', 'other'))
 );
 CREATE INDEX idx_email ON profiles(email);

@@ -3,6 +3,7 @@ package com.tradingsystem.trading_bot.model;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,10 +26,10 @@ public class CommissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "transaction_id", nullable = false)
     private TransactionEntity transaction;
 
-    private BigDecimal commisionValue;
-    private String commisionAsset;
+    private BigDecimal commissionValue;
+    private String commissionAsset;
 }

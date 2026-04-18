@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 public class CommissionDTO {
     
     @JsonProperty("commission")
-    private BigDecimal commisionValue;
+    private BigDecimal commissionValue;
 
     @JsonProperty("commissionAsset")
-    private String commisionAsset;
+    private String commissionAsset;
     
 }

@@ -44,8 +44,8 @@ public class TransactionService {
 
         List<CommissionEntity> commissionEntities = safeCommissions.stream()
                 .map(commissionDTO -> CommissionEntity.builder()
-                        .commisionAsset(commissionDTO.getCommisionAsset())
-                        .commisionValue(commissionDTO.getCommisionValue())
+                        .commissionAsset(commissionDTO.getCommissionAsset())
+                        .commissionValue(commissionDTO.getCommissionValue())
                         .transaction(transaction)
                         .build())
                 .toList();

@@ -7,6 +7,8 @@ import com.tradingsystem.trading_bot.utils.MarketActions;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,10 +33,12 @@ public class TransactionEntity {
     private Long id;
     private String symbol;
     private Long orderId;
+
+    @Enumerated(EnumType.STRING)
     private MarketActions action;
     private String status;
     private Long timestamp;
-    private BigDecimal quantity;
+    private Double quantity;
     private BigDecimal priceQty;
     private String type;
 

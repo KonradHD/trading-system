@@ -33,7 +33,7 @@ public class TransactionDTO {
     private Long timestamp;
 
     @JsonProperty("executedQty")
-    private BigDecimal quantity;
+    private Double quantity;
 
     @JsonProperty("cummulativeQuoteQty")
     private BigDecimal priceQty;
