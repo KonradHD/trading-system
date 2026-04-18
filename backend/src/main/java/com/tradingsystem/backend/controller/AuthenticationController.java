@@ -4,7 +4,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +58,20 @@ public class AuthenticationController {
                     .status(HttpStatus.OK)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .body(createLoginResponse(user, accessToken));
+    }
+
+    @PostMapping(value="/refresh", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<TokenJwt> checkSession(@CookieValue(name = "refresh_token", required = false) String plainRefreshToken){
+        log.info("Received refreshing request");
+
+        if (plainRefreshToken == null) {
+        throw new BadCredentialsException("No valid refresh token. Sign in again.");
+        }
+        User user = refreshTokenService.validateAndGetUser(plainRefreshToken);
+        TokenJwt newAccessToken = tokenJwtService.generateToken(user);
+
+        return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(newAccessToken);
     }
 }

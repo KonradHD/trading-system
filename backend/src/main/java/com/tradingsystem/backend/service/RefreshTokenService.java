@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import com.tradingsystem.backend.model.Token;
@@ -36,6 +37,19 @@ public class RefreshTokenService {
                 .build();
                 
         tokenRepository.save(tokenEntity);
-        return encodedRefreshToken;
+        return plainRefreshToken;
+    }
+
+    public User validateAndGetUser(String plainRefreshToken) {   
+        String hashedToken = encrypter.encode(plainRefreshToken);
+        Token dbToken = tokenRepository.findByRefreshToken(hashedToken)
+                .orElseThrow(() -> new BadCredentialsException("Invalid refresh token"));
+
+        if (dbToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            tokenRepository.delete(dbToken);
+            throw new BadCredentialsException("Refresh token expired. Sign in again");
+        }
+
+        return dbToken.getUser();
     }
 }
