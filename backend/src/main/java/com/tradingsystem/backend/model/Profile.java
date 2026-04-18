@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.tradingsystem.backend.utils.types.Gender;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,6 +45,9 @@ public class Profile {
     private LocalDate dateOfBirth;
     private String city;
     private String address;
+
+    @Column(columnDefinition="bpchar(9)")
     private String phone;
+    @Column(columnDefinition="bpchar(11)")
     private String pesel;
 }

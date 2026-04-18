@@ -18,7 +18,6 @@ import com.tradingsystem.trading_bot.utils.MarketActions;
 import com.tradingsystem.trading_bot.utils.SignatureGenerator;
 import com.tradingsystem.trading_bot.utils.parsing.TransactionsParser;
 
-import jakarta.transaction.Transaction;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -109,9 +108,9 @@ public class OrderExecutionService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             // TODO: Zapisać account balance 
             if(response.statusCode() == 200){
-               log.info("Authorized connection! Received balance data: {}" + response.body());
+               log.info("Authorized connection! Received balance data: " + response.body());
             } else {
-                log.error("Unathorized http connection while checking account balance. HTTP code: {}" + response.statusCode());
+                log.error("Unathorized http connection while checking account balance. HTTP code: " + response.statusCode());
                 log.error("Error response: {}" + response.body());
             }
         } catch (Exception e) {

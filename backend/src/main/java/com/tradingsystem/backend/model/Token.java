@@ -31,7 +31,7 @@ public class Token {
     @JoinColumn(name="user_id", nullable=false)
     private User user;
     private String refreshToken;
-    private LocalDateTime tokenCreated;
-    private LocalDateTime tokenExpires;
-    private String devideInfo;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
+    private String deviceInfo;
 }
