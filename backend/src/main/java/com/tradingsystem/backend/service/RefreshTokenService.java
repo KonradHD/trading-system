@@ -20,7 +20,7 @@ public class RefreshTokenService {
     private final TokenRepository tokenRepository;
     private final TokenEncrypter encrypter;
 
-    @Value("${refreshtoken.expiration.days}")
+    @Value("${app.security.refreshtoken.expiration.days}")
     private Integer expiration;
 
     public String generateRefreshToken(User authenticatedUser, String deviceInfo){

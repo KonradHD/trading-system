@@ -12,7 +12,6 @@ import com.tradingsystem.trading_bot.model.TransactionEntity;
 import java.util.Collections;
 import java.util.List;
 
-import jakarta.transaction.Transaction;
 import lombok.RequiredArgsConstructor;
 
 @Service

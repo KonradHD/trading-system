@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     status VARCHAR(20) NOT NULL,
     timestamp BIGINT NOT NULL,
     quantity DOUBLE PRECISION NOT NULL,
-    price_qty NUMERIC(15, 4) NOT NULL,
+    price_qty NUMERIC(24, 8) NOT NULL,
     type VARCHAR(20) NOT NULL
 );
 CREATE INDEX idx_transations_symbol ON transactions(symbol);

@@ -19,10 +19,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TokenJwtService {
 
-    @Value("${jwt.secret}")
+    @Value("${app.security.jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration.miliseconds}")
+    @Value("${app.security.jwt.expiration.miliseconds}")
     private Long expirationTime;
 
     public TokenJwt generateToken(User authenticatedUser){

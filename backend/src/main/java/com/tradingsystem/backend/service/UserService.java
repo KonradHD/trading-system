@@ -4,11 +4,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tradingsystem.backend.dto.BinanceSecret;
 import com.tradingsystem.backend.dto.RegistrationProfile;
 import com.tradingsystem.backend.dto.user.UserRegistration;
 import com.tradingsystem.backend.dto.user.UserResponse;
-import com.tradingsystem.backend.exception.UserAlreadyExistsException;
 import static com.tradingsystem.backend.exception.UserAlreadyExistsException.userAlreadyExistsException;
+import static com.tradingsystem.backend.exception.UserNotFoundException.userNotFoundException;
 import com.tradingsystem.backend.model.Profile;
 import com.tradingsystem.backend.model.User;
 import com.tradingsystem.backend.repository.ProfileRepository;
@@ -20,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EncryptionService encryptionService;
 
 
 
@@ -61,5 +64,16 @@ public class UserService {
         profile.setUser(user);
         user.setProfile(profile);
         return user;
+    }
+
+    @Transactional
+    public void saveBinanceKeys(Long userId, BinanceSecret secrets){
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> userNotFoundException());
+
+        String encryptedSecretKey = encryptionService.encrypt(secrets.binanceSecretKey());
+        
+        user.setBinanceApiKey(secrets.binanceApiKey());
+        user.setBinanceSecretKey(encryptedSecretKey);
     }
 }

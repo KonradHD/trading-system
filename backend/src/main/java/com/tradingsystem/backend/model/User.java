@@ -6,6 +6,7 @@ import java.util.List;
 import com.tradingsystem.backend.utils.types.Role;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -40,10 +41,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "binance_api_key", nullable = true)
+    private String binanceApiKey;
+
+    @Column(name = "binacance_secret_key", nullable = true)
+    private String binanceSecretKey;
+
     @OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Profile profile;
 
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     @Builder.Default
     private List<Token> tokens = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @Builder.Default
+    private List<Wallet> wallets = new ArrayList<>();
 }

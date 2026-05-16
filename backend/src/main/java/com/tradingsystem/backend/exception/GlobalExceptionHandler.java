@@ -56,4 +56,11 @@ public class GlobalExceptionHandler {
                 new ResponseMessage("Error","Unexpected server error: " + e.getMessage())
             );
     }
+
+    @ExceptionHandler(WalletNotFoundException.class)
+    public ResponseEntity<ResponseMessage> handleWalletNotFoundExceptions(WalletNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ResponseMessage("Error", e.getMessage())
+            );
+    }
 }
