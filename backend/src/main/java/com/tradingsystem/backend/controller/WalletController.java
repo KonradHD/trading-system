@@ -1,5 +1,7 @@
 package com.tradingsystem.backend.controller;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -47,12 +49,12 @@ public class WalletController {
         return ResponseEntity.status(HttpStatus.OK).body(createWalletsResponse(walletId, walletInventories));
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NewWalletResponse> createWallet(
-        @AuthenticationPrincipal Long userId,
-        @RequestBody @Valid NewWalletRequest request){
+        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+        @RequestBody(required = true) @Valid NewWalletRequest request
+    ){
         log.info("Received request to create new wallet");
-
         NewWalletResponse newWallet = walletService.createWallet(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newWallet);
     }

@@ -41,7 +41,7 @@ public class BinanceWebSocketClient implements WebSocket.Listener{
 
     @Override
     public void onError(WebSocket webSocket, Throwable error) {
-        log.error("Binance websocket connection error: " + error.getMessage());
+        log.error("Binance websocket connection error: {}", error.getMessage());
     }
 
     @Override

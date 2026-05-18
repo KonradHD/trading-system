@@ -21,7 +21,7 @@ public class OpenInterestEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String symbol;
     private Double openInterest;
     private Long timestamp;

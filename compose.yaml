@@ -1,6 +1,16 @@
 name: trading-system
 
 services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: trading-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redis_data:/data
+      
   db:
     container_name: trading-postgres
     hostname: postgres
@@ -8,14 +18,14 @@ services:
     restart: unless-stopped
     environment:
       - 'POSTGRES_DB=trading-system'
-      - 'POSTGRES_USER=${POSTGRES_USER}'
+      - 'POSTGRES_USER=${POSTGRES_USERNAME}'
       - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
     ports:
       - 5432:5432
     volumes:
       - trading_db:/var/lib/postgresql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d trading-system -U $${POSTGRES_USER}" ]
+      test: ["CMD-SHELL", "pg_isready -d trading-system -U $${POSTGRES_USERNAME}" ]
       interval: 5s
       timeout: 60s
       retries: 5
@@ -55,3 +65,4 @@ services:
 
 volumes: 
   trading_db:
+  redis_data:

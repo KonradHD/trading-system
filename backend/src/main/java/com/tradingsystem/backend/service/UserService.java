@@ -1,11 +1,15 @@
 package com.tradingsystem.backend.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tradingsystem.backend.dto.BinanceSecret;
 import com.tradingsystem.backend.dto.RegistrationProfile;
+import com.tradingsystem.backend.dto.UserKeysDTO;
 import com.tradingsystem.backend.dto.user.UserRegistration;
 import com.tradingsystem.backend.dto.user.UserResponse;
 import static com.tradingsystem.backend.exception.UserAlreadyExistsException.userAlreadyExistsException;
@@ -75,5 +79,14 @@ public class UserService {
         
         user.setBinanceApiKey(secrets.binanceApiKey());
         user.setBinanceSecretKey(encryptedSecretKey);
+    }
+
+
+    public List<UserKeysDTO> getUsersKeys(List<Long> userIds){
+        List<User> users = userRepository.findAllById(userIds);
+
+        return users.stream()
+            .map(UserKeysDTO::createUserKeysDTO)
+            .collect(Collectors.toList());
     }
 }

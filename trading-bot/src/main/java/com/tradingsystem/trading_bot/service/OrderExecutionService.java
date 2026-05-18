@@ -110,7 +110,7 @@ public class OrderExecutionService {
             if(response.statusCode() == 200){
                log.info("Authorized connection! Received balance data: " + response.body());
             } else {
-                log.error("Unathorized http connection while checking account balance. HTTP code: " + response.statusCode());
+                log.error("Unathorized http connection while checking account balance. HTTP code: {}", response.statusCode());
                 log.error("Error response: {}" + response.body());
             }
         } catch (Exception e) {

@@ -46,6 +46,10 @@ public class Profile {
     private String city;
     private String address;
 
+    @Column(name = "active_trades", nullable = false)
+    @Builder.Default
+    private Boolean activeTrades = false;
+
     @Column(columnDefinition="bpchar(9)")
     private String phone;
     @Column(columnDefinition="bpchar(11)")

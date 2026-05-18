@@ -42,7 +42,7 @@ public class WalletService {
         return createWalletResponse(wallet);
     }
 
-
+    @Transactional
     public void deleteWallet(Long walletId){
         Wallet wallet = walletRepository.findById(walletId)
             .orElseThrow(() -> walletNotFoundException(walletId));

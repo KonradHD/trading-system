@@ -31,7 +31,7 @@ public class CandleParser extends AbstractParser {
                     .volume(k.get("v").asDouble())
                     .build();
         } catch (Exception e) {
-            log.error("Error parsing WebSocket candle: " + e.getMessage());
+            log.error("Error parsing WebSocket candle: {}", e.getMessage());
             return null;
         }
     }

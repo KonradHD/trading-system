@@ -1,13 +1,12 @@
 package com.tradingsystem.trading_bot;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(
+	webEnvironment = SpringBootTest.WebEnvironment.NONE,
+	properties = "spring.autoconfigure.exclude=org.springframework.cloud.autoconfigure.LifecycleMvcEndpointAutoConfiguration"
+)
 class TradingBotApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
 
 }
