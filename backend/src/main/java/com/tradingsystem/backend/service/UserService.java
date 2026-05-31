@@ -1,19 +1,17 @@
 package com.tradingsystem.backend.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
+import com.tradingsystem.backend.exception.UserNotFoundException;
+import com.tradingsystem.backend.repository.WalletRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tradingsystem.backend.dto.BinanceSecret;
 import com.tradingsystem.backend.dto.RegistrationProfile;
-import com.tradingsystem.backend.dto.UserKeysDTO;
 import com.tradingsystem.backend.dto.user.UserRegistration;
 import com.tradingsystem.backend.dto.user.UserResponse;
 import static com.tradingsystem.backend.exception.UserAlreadyExistsException.userAlreadyExistsException;
-import static com.tradingsystem.backend.exception.UserNotFoundException.userNotFoundException;
 import com.tradingsystem.backend.model.Profile;
 import com.tradingsystem.backend.model.User;
 import com.tradingsystem.backend.repository.ProfileRepository;
@@ -30,6 +28,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final EncryptionService encryptionService;
+    private final WalletRepository walletRepository;
 
 
 
@@ -73,20 +72,11 @@ public class UserService {
     @Transactional
     public void saveBinanceKeys(Long userId, BinanceSecret secrets){
         User user = userRepository.findById(userId)
-                    .orElseThrow(() -> userNotFoundException());
+                    .orElseThrow(UserNotFoundException::userNotFoundException);
 
         String encryptedSecretKey = encryptionService.encrypt(secrets.binanceSecretKey());
         
         user.setBinanceApiKey(secrets.binanceApiKey());
         user.setBinanceSecretKey(encryptedSecretKey);
-    }
-
-
-    public List<UserKeysDTO> getUsersKeys(List<Long> userIds){
-        List<User> users = userRepository.findAllById(userIds);
-
-        return users.stream()
-            .map(UserKeysDTO::createUserKeysDTO)
-            .collect(Collectors.toList());
     }
 }

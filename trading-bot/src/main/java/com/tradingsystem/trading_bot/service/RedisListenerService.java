@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import com.tradingsystem.trading_bot.dto.ActiveUser;
-import com.tradingsystem.trading_bot.dto.BotActiveUsersMessage;
+import com.tradingsystem.trading_bot.dto.ActiveWallet;
+import com.tradingsystem.trading_bot.dto.BotActiveWalletsMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -16,23 +16,23 @@ import com.tradingsystem.trading_bot.dto.BotActiveUsersMessage;
 public class RedisListenerService {
 
     private final ObjectMapper objectMapper;
-    private final ActiveUsersRegistry activeUsersRegistry;
+    private final ActiveWalletsRegistry activeWalletsRegistry;
 
     public void handleMessage(String messageJson) {
         try {
             log.debug("Received new message from Redis: {}", messageJson);
 
-            BotActiveUsersMessage message = objectMapper.readValue(messageJson, BotActiveUsersMessage.class);
+            BotActiveWalletsMessage message = objectMapper.readValue(messageJson, BotActiveWalletsMessage.class);
 
             switch (message.action()) {
                 case "START" -> {
-                    ActiveUser user = new ActiveUser(message.userId(), message.context());
-                    activeUsersRegistry.addUser(user);
-                    log.info("Successfully added user ID: {} to the bot's in-memory registry", message.userId());
+                    ActiveWallet wallet = new ActiveWallet(message.walletId(), message.context());
+                    activeWalletsRegistry.addWallet(wallet);
+                    log.info("Successfully added wallet: {} to the bot's in-memory registry", message.walletId());
                 }
                 case "STOP" -> {
-                    activeUsersRegistry.removeUser(message.userId());
-                    log.info("Stopped the bot and removed user ID: {} from the in-memory registry", message.userId());
+                    activeWalletsRegistry.removeWallet(message.walletId());
+                    log.info("Stopped the bot and removed wallet: {} from the in-memory registry", message.walletId());
                 }
                 default -> log.warn("Unknown control action received: {}", message.action());
             }

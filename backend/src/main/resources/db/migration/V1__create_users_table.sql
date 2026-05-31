@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL,
     binance_api_key VARCHAR(255),
-    binacance_secret_key VARCHAR(255),
+    binance_secret_key VARCHAR(255),
     CONSTRAINT check_role CHECK (role in ('ADMIN', 'USER'))
 );
 CREATE INDEX idx_login ON users(login);

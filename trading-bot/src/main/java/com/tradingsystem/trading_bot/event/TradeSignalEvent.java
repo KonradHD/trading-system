@@ -18,8 +18,8 @@ public class TradeSignalEvent {
     public TradeSignalEvent(MarketActions action, String cryptoName, BigDecimal quantity, String reason, Instant creationTime){
         this.action = action;
         this.cryptoName = cryptoName.toUpperCase();
-        this.reason = reason;
         this.quantity = quantity;
+        this.reason = reason;
         this.creationTime = creationTime;
     }
 }

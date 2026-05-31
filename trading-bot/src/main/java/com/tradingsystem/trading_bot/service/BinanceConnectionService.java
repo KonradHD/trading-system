@@ -37,8 +37,6 @@ public class BinanceConnectionService implements CommandLineRunner{
         URI url2 = BinanceAPIUrlBuilder.httpCandleEndpoint("btcusdt", "1m", 100);
         // socketClient.connect(url);
         // disposableHttpClient.historicalCandles(url2);
-        
-        orderService.checkBalance();
 
         TradeSignalEvent signal = new TradeSignalEvent(
             MarketActions.BUY,

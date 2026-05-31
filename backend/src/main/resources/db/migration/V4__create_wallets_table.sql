@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS wallets (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE NOT NULL,
     available_funds NUMERIC(24, 8) NOT NULL CHECK(available_funds >= 0),
+    active_trades BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_user_id_wallets FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

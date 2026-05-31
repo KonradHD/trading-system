@@ -52,6 +52,10 @@ public class Wallet {
     @Builder.Default
     private BigDecimal availableFunds = BigDecimal.ZERO;
 
+    @Column(name = "active_trades", nullable = false)
+    @Builder.Default
+    private Boolean activeTrades = false;
+
     @PrePersist
     protected void onCreate() {
         if (this.createdAt == null) {

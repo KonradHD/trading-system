@@ -63,4 +63,11 @@ public class GlobalExceptionHandler {
                 new ResponseMessage("Error", e.getMessage())
             );
     }
+
+    @ExceptionHandler(NotEnoughResourcesException.class)
+    public ResponseEntity<ResponseMessage> handleNotEnoughResourcesExceptions(NotEnoughResourcesException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ResponseMessage("Error", e.getMessage())
+        );
+    }
 }

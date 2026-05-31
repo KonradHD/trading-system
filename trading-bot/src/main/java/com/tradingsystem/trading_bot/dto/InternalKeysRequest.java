@@ -5,7 +5,9 @@ import java.util.List;
 import jakarta.validation.constraints.NotEmpty;
 
 public record InternalKeysRequest(
-    @NotEmpty(message = "Request for keys cannot be empty.")  List<Long> userIds
+    @NotEmpty(message = "Request for keys cannot be empty.")  List<Long> walletIds
 ) {
-    
+    public static InternalKeysRequest of(List<Long> walletIds) {
+        return new InternalKeysRequest(walletIds);
+    }
 }

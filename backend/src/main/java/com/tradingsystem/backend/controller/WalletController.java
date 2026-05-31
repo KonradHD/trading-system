@@ -4,16 +4,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.tradingsystem.backend.utils.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tradingsystem.backend.dto.InventoryDTO;
 import com.tradingsystem.backend.dto.NewWalletRequest;
@@ -65,5 +61,16 @@ public class WalletController {
 
         walletService.deleteWallet(walletId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value="/active/switch/{user_id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> switchTradesActivity(@PathVariable(value="user_id") Long userId){
+        log.info("Received request to switch trades activity for user: {}", userId);
+        Boolean activityStatus = walletService.switchActivity(userId);
+        String message = activityStatus ? "Bot trades for user: %s is now active.".formatted(userId) : "Bot trades for user: %s is now disabled.".formatted(userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseMessage("Success", message)
+        );
     }
 }

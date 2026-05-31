@@ -6,34 +6,30 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class SignatureGenerator {
-    
-    private final String apiSecret;
-    private final String hashAlgorithm;
 
+    @Value("${app.security.hash-algorithm}")
+    private String hashAlgorithm;
 
-    public String generate(String text){
+    public String generate(String text, String apiSecret){
         try {
-                
-            // obiekt klucza
             SecretKeySpec secretKeySpec = new SecretKeySpec(
-                apiSecret.getBytes(StandardCharsets.UTF_8), 
-                hashAlgorithm
+                apiSecret.getBytes(StandardCharsets.UTF_8),
+                    hashAlgorithm
             );
 
-            // inicjalizacja maszyny szyfrującej
             Mac hashMachine = Mac.getInstance(hashAlgorithm);
             hashMachine.init(secretKeySpec);
-                
-            // szyfrowanie 
             byte[] rawHmac = hashMachine.doFinal(text.getBytes(StandardCharsets.UTF_8));
-            
             return bytesToHex(rawHmac);
 
         } catch (Exception e) {
-            throw new RuntimeException("Cryptografic issue while generating signature.", e);
+            throw new RuntimeException("Cryptographic issue while generating signature.", e);
         }
     }
 

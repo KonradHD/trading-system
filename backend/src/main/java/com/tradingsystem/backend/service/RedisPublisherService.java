@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tradingsystem.backend.dto.ActiveContext;
-import com.tradingsystem.backend.dto.BotActiveUsersMessage;
+import com.tradingsystem.backend.dto.BotActiveWalletsMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,29 +20,29 @@ public class RedisPublisherService {
     private final StringRedisTemplate stringRedisTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${redis.bot.active-users.endpoint}")
+    @Value("${redis.bot.active-wallets.endpoint}")
     private String ACTIVE_CHANNEL_NAME;
 
-    public void notifyBotToStart(Long userId, ActiveContext context) {
+    public void notifyBotToStart(Long walletId, ActiveContext context) {
         try {
-            BotActiveUsersMessage message = new BotActiveUsersMessage("START", userId, context);
+            BotActiveWalletsMessage message = new BotActiveWalletsMessage("START", walletId, context);
             String jsonPayload = objectMapper.writeValueAsString(message);
             stringRedisTemplate.convertAndSend(ACTIVE_CHANNEL_NAME, jsonPayload);
-            log.info("Message was published on {} channel; user: {} starts using bot service", 
-                     ACTIVE_CHANNEL_NAME, userId);
+            log.info("Message was published on {} channel; wallet: {} starts using bot service",
+                     ACTIVE_CHANNEL_NAME, walletId);
 
         } catch (JsonProcessingException e) {
             log.error("Cannot convert message to Redis: ", e);
         }
     }
 
-    public void notifyBotToStop(Long userId, ActiveContext context) {
+    public void notifyBotToStop(Long walletId, ActiveContext context) {
         try {
-            BotActiveUsersMessage message = new BotActiveUsersMessage("STOP", userId, context);
+            BotActiveWalletsMessage message = new BotActiveWalletsMessage("STOP", walletId, context);
             String jsonPayload = objectMapper.writeValueAsString(message);
             stringRedisTemplate.convertAndSend(ACTIVE_CHANNEL_NAME, jsonPayload);
-            log.info("Message was published on {} channel; user: {} stops using bot service", 
-                     ACTIVE_CHANNEL_NAME, userId);
+            log.info("Message was published on {} channel; wallet: {} stops using bot service",
+                     ACTIVE_CHANNEL_NAME, walletId);
 
         } catch (JsonProcessingException e) {
             log.error("Cannot convert message to Redis: ", e);

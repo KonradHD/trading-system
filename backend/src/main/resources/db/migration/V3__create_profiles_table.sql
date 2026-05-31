@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS profiles (
     address VARCHAR(255) NOT NULL,
     phone CHAR(9) NOT NULL CHECK(phone ~ '^[0-9]{9}$'),
     pesel CHAR(11) NOT NULL CHECK(pesel ~ '^[0-9]{11}$'),
-    active_trades BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_user_id_profiles FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT check_gender CHECK(gender in ('Male', 'Female', 'Other'))
 );

@@ -31,6 +31,8 @@ public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long walletId;
     private String symbol;
     private Long orderId;
 

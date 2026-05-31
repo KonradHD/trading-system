@@ -13,7 +13,7 @@ import com.tradingsystem.trading_bot.service.RedisListenerService;
 @Configuration
 public class RedisSubscriberConfig {
 
-    @Value("${redis.bot.active-users.endpoint}")
+    @Value("${redis.bot.active-wallets.endpoint}")
     private String ACTIVE_CHANNEL_NAME;
 
     @Bean
