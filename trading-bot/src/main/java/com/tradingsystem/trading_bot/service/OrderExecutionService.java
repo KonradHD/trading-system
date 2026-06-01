@@ -67,6 +67,11 @@ public class OrderExecutionService {
                 Instant.now().toEpochMilli());
 
         List<Long> walletsId = activeWalletsRegistry.getAllActiveWallets();
+        if(walletsId.isEmpty()){
+            log.info("There is no active wallets registered");
+            return;
+        }
+
         WalletKeysResponse walletKeysResponse = backendClient.fetchWalletsKeys(InternalKeysRequest.of(walletsId));
 
         for(WalletKeysDTO dto : walletKeysResponse.keys()){

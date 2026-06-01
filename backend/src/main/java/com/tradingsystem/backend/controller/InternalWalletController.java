@@ -16,7 +16,7 @@ import com.tradingsystem.backend.dto.InternalKeysRequest;
 import static com.tradingsystem.backend.dto.WalletKeysResponse.createWalletKeysResponse;
 import static com.tradingsystem.backend.dto.WalletSynchroResponse.createWalletSynchroResponse;
 
-import com.tradingsystem.trading_bot.dto.TransactionDTO;
+import com.tradingsystem.backend.dto.TransactionDTO;
 import com.tradingsystem.backend.dto.WalletSynchroResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +37,7 @@ public class InternalWalletController {
     private String internalSecret; 
 
     @PostMapping(value = "/keys", consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WalletKeysResponse> getUsersKeys(
+    public ResponseEntity<WalletKeysResponse> getWalletsKeys(
         @RequestBody @Valid InternalKeysRequest request,
         @RequestHeader( value = "X-Internal-Secret", required = false) String requestSecret
     ){
@@ -50,13 +50,13 @@ public class InternalWalletController {
         return ResponseEntity.status(HttpStatus.OK).body(createWalletKeysResponse(keys));
     }
 
-    @PutMapping(value = "/wallet_id", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{wallet_id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WalletSynchroResponse> synchronizeWallet(
             @PathVariable("wallet_id") Long walletId,
             @RequestBody @Valid TransactionDTO transaction,
             @RequestHeader( value = "X-Internal-Secret", required = false) String requestSecret
     ){
-        log.info("Received wallet ({}) synchronization request after transaction: {}.", walletId, transaction.getOrderId());
+        log.info("Received wallet ({}) synchronization request after transaction: {}.", walletId, transaction.transactionId());
         if (!internalSecret.equals(requestSecret)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

@@ -44,7 +44,7 @@ public class User {
     @Column(name = "binance_api_key", nullable = true)
     private String binanceApiKey;
 
-    @Column(name = "binacance_secret_key", nullable = true)
+    @Column(name = "binance_secret_key", nullable = true)
     private String binanceSecretKey;
 
     @OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)

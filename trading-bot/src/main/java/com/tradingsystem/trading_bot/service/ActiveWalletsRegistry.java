@@ -19,10 +19,10 @@ public class ActiveWalletsRegistry {
     private final Map<Long, ActiveContext> activeWallets = new ConcurrentHashMap<>();
 
     public void addWallet(ActiveWallet wallet) {
-        if (activeWallets.putIfAbsent(wallet.userId(), wallet.context()) == null) {
-            log.info("Wallet {} is connected to trading-bot.", wallet.userId());
+        if (activeWallets.putIfAbsent(wallet.walletId(), wallet.context()) == null) {
+            log.info("Wallet {} is connected to trading-bot.", wallet.walletId());
         } else {
-            log.warn("Ignored START command: Wallet {} is already connected.", wallet.userId());
+            log.warn("Ignored START command: Wallet {} is already connected.", wallet.walletId());
         }
     }
 

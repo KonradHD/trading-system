@@ -1,13 +1,14 @@
 package com.tradingsystem.trading_bot.service;
 
 import com.tradingsystem.trading_bot.client.BackendInternalClient;
+import com.tradingsystem.trading_bot.dto.TransactionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.tradingsystem.trading_bot.repository.TransactionRepository;
 import com.tradingsystem.trading_bot.utils.parsing.TransactionsParser;
 import com.tradingsystem.trading_bot.dto.CommissionDTO;
-import com.tradingsystem.trading_bot.dto.TransactionDTO;
+import com.tradingsystem.trading_bot.dto.BinanceTransactionDTO;
 import com.tradingsystem.trading_bot.model.CommissionEntity;
 import com.tradingsystem.trading_bot.model.TransactionEntity;
 
@@ -30,8 +31,12 @@ public class TransactionService {
     private final BackendInternalClient backendClient;
 
 
-    public void saveTransaction(Long walletId, TransactionDTO dto){
+    public void saveTransaction(Long walletId, BinanceTransactionDTO dto){
         TransactionEntity entity = mapToEntity(walletId, dto);
+        transactionRepository.save(entity);
+    }
+
+    public void saveTransaction(TransactionEntity entity){
         transactionRepository.save(entity);
     }
 
@@ -40,12 +45,15 @@ public class TransactionService {
         try{
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if(response.statusCode() == 200){
-                TransactionDTO transaction = parser.parseTransaction(response.body());
-                saveTransaction(walletId, transaction);
+                BinanceTransactionDTO binanceTransaction = parser.parseTransaction(response.body());
+                TransactionEntity entity = mapToEntity(walletId, binanceTransaction);
+                saveTransaction(entity);
+
                 log.info("Transaction was successfully conducted and saved.");
-                if(transaction.getStatus().equalsIgnoreCase("filled")){
+                if(binanceTransaction.getStatus().equalsIgnoreCase("filled")){
                     log.info("Transaction was filled");
-                    backendClient.synchronizeWallet(walletId, transaction);
+                    TransactionDTO transactionDTO = TransactionDTO.fromBinanceTransactionDTO(entity.getId(), walletId, binanceTransaction);
+                    backendClient.synchronizeWallet(transactionDTO.walletId(), transactionDTO);
                 }
             }else{
                 log.warn("Transaction was rejected for wallet: {}.", walletId);
@@ -57,7 +65,7 @@ public class TransactionService {
     }
 
 
-    private TransactionEntity mapToEntity(Long walletId, TransactionDTO dto){
+    private TransactionEntity mapToEntity(Long walletId, BinanceTransactionDTO dto){
         TransactionEntity transaction = TransactionEntity.builder()
                 .walletId(walletId)
                 .symbol(dto.getSymbol())

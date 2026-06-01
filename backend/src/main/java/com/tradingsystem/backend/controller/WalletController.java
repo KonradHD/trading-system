@@ -56,18 +56,18 @@ public class WalletController {
     }
 
     @DeleteMapping(value = "/{wallet_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteWallet(@PathVariable("wallet_id") Long walletId){
+    public ResponseEntity<Void> deleteWallet(@PathVariable(value="wallet_id") Long walletId){
         log.info("Received request to delete wallet with id: {}", walletId);
 
         walletService.deleteWallet(walletId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value="/active/switch/{user_id}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> switchTradesActivity(@PathVariable(value="user_id") Long userId){
-        log.info("Received request to switch trades activity for user: {}", userId);
-        Boolean activityStatus = walletService.switchActivity(userId);
-        String message = activityStatus ? "Bot trades for user: %s is now active.".formatted(userId) : "Bot trades for user: %s is now disabled.".formatted(userId);
+    @PutMapping(value="/active/switch/{wallet_id}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> switchTradesActivity(@PathVariable(value="wallet_id") Long walletId){
+        log.info("Received request to switch trades activity for wallet: {}", walletId);
+        Boolean activityStatus = walletService.switchActivity(walletId);
+        String message = activityStatus ? "Bot trades for wallet: %s is now active.".formatted(walletId) : "Bot trades for wallet: %s is now disabled.".formatted(walletId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseMessage("Success", message)

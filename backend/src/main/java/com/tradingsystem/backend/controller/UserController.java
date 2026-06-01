@@ -22,8 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
     private final UserService userService;
-    
-    // tylko format "application/json"
+
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE)
     public ResponseEntity<UserResponse> signUp(@RequestBody @Valid UserRegistration request){
         log.info("Received user registration request: {}", request.login());

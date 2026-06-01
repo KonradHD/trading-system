@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     quantity DOUBLE PRECISION NOT NULL,
     price_qty NUMERIC(24, 8) NOT NULL,
     type VARCHAR(20) NOT NULL,
-    CONSTRAINT fk_transactions_wallet FOREIGN KEY wallet_id REFERENCES wallets(id) ON DELETE CASCADE
+    CONSTRAINT fk_transactions_wallet FOREIGN KEY(wallet_id) REFERENCES wallets(id) ON DELETE CASCADE
 );
 CREATE INDEX idx_transactions_symbol ON transactions(symbol);
 CREATE INDEX idx_transactions_wallet ON transactions(wallet_id);

@@ -11,7 +11,7 @@ import com.tradingsystem.backend.exception.UserNotFoundException;
 import com.tradingsystem.backend.exception.WalletNotFoundException;
 import com.tradingsystem.backend.model.User;
 import com.tradingsystem.backend.repository.UserRepository;
-import com.tradingsystem.trading_bot.dto.TransactionDTO;
+import com.tradingsystem.backend.dto.TransactionDTO;
 import org.springframework.stereotype.Service;
 
 import com.tradingsystem.backend.model.Wallet;
@@ -67,18 +67,18 @@ public class WalletService {
     }
 
     @Transactional
-    public Boolean switchActivity(Long userId){
-        Wallet wallet = walletRepository.findById(userId)
-                .orElseThrow(UserNotFoundException::userNotFoundException);
+    public Boolean switchActivity(Long walletId){
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> createWalletNotFoundException(walletId));
 
         ActiveContext context = new ActiveContext("all", BigDecimal.valueOf(1000000));
         Boolean newStatus = !wallet.getActiveTrades();
         wallet.setActiveTrades(newStatus);
 
         if (newStatus) {
-            redisPublisher.notifyBotToStart(userId, context);
+            redisPublisher.notifyBotToStart(walletId, context);
         } else {
-            redisPublisher.notifyBotToStop(userId, context);
+            redisPublisher.notifyBotToStop(walletId, context);
         }
         return newStatus;
     }
@@ -97,8 +97,8 @@ public class WalletService {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> createWalletNotFoundException(walletId));
 
-        BigDecimal quantity = BigDecimal.valueOf(transaction.getQuantity());
-        BigDecimal transactionCost = quantity.multiply(transaction.getPriceQty());
+        BigDecimal quantity = BigDecimal.valueOf(transaction.quantity());
+        BigDecimal transactionCost = quantity.multiply(transaction.priceQty());
         BigDecimal walletFunds = wallet.getAvailableFunds();
 
         if(transactionCost.compareTo(walletFunds) > 0){
