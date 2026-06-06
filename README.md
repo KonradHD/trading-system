@@ -54,8 +54,13 @@ There is one central PostgreSQL database for the whole system, initialized and m
 
 ## Initialize environment and run application (for developers)
 
-1. Generate the Bincance API keys to connect to the market and save it in trading-bot/.env
-2. Save database credentials into your .env file.
+1. Save database credentials into your backend/.env and trading-bot/.env files.
+2. Run Redis service using Docker: 
+
+```
+docker compose up -d redis
+```
+
 3. In order to run the trading-bot microservice:
 
 ```
