@@ -12,6 +12,7 @@ import com.tradingsystem.trading_bot.utils.MarketDataType;
 import com.tradingsystem.trading_bot.utils.MarketDataResolver;
 import com.tradingsystem.trading_bot.utils.parsing.CandleParser;
 import com.tradingsystem.trading_bot.utils.parsing.FuturesMarketParser;
+import com.tradingsystem.trading_bot.analyser.TradingStrategy;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class MarketDataRouter {
     private final FuturesMarketParser futuresParser = new FuturesMarketParser();
     private final FuturesMarketService futuresMarketService;
     private final CandleDataService candleDataService;
+    private final TradingStrategy tradingStrategy;  
 
     @Async
     public void processRawMarketData(String data, String query) {
@@ -36,6 +38,7 @@ public class MarketDataRouter {
                 if (candle.getIsClosed()) {
                     log.info("New websocket candle was received.");
                     candleDataService.saveCandle(candle); 
+                    tradingStrategy.analyze(candle.getSymbol());
                 }
             }
 
