@@ -52,6 +52,43 @@ There is one central PostgreSQL database for the whole system, initialized and m
 
 ![Database diagram](docs/db_schema.png)
 
+## Struktura Widoków
+
+Aplikacja kliencka opiera się na poniższej strukturze ścieżek, definiujących główne widoki i formularze dostępne dla użytkownika.
+
+### Dostęp publiczny
+Widoki ogólnodostępne dla niezalogowanych użytkowników.
+
+* **`/home`** – Strona główna prezentująca możliwości i architekturę systemu
+* **`/login`** – Formularz uwierzytelniania użytkownika
+* **`/register`** – Formularz rejestracji nowego konta w systemie
+* **`/stock`** - Informacje o działaniu giełdy, lista dostępnych kryptowalut
+* **`/stock/{symbol}`** - Informacje o konkretnej kryptowalucie - wykres giełdowy
+
+### Panel użytkownika
+Zabezpieczona część aplikacji, wymagająca aktywnej sesji.
+
+
+#### Dashboard
+* **`/dashboard`** – Główny widok podsumowujący, dostarczający kluczowych metryk:
+  * Całkowita wartość portfela
+  * Szybki podgląd statusu aktywnych algorytmów
+  * Ostatnie zrealizowane transakcje
+  * Dostęp do utworzonych portfeli
+  * Możliwość utworzenia nowego portfela
+
+
+#### Zarządzanie kapitałem i integracja
+* **`/wallets/{id}`** – Statystyki dotyczące konkretnego portfela, saldo, transakcje, akcje, możliwość włączenia/wyłączenia działania bota.
+* **`/settings/api-keys`** – Bezpieczny panel do wprowadzania, edycji oraz usuwania poświadczeń giełdowych (API Key i Secret Key).
+
+#### Raportowanie i Historia
+* **`/history`** – Paginowana ewidencja wszystkich zleceń giełdowych.
+* **`/analytics`** – Moduł analityczny z wykresami obrazującymi zmianę salda w czasie, wskaźnik ROI oraz skuteczność poszczególnych strategii.
+
+#### Konto
+* **`/profile`** – Ustawienia konta użytkownika, w tym zmiana hasła i zarządzanie podstawowymi danymi profilowymi.
+
 ## Initialize environment and run application (for developers)
 
 1. Save database credentials into your backend/.env and trading-bot/.env files.
