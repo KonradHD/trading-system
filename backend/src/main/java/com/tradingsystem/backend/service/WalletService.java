@@ -1,21 +1,18 @@
 package com.tradingsystem.backend.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.tradingsystem.backend.dto.*;
 import com.tradingsystem.backend.exception.NotEnoughResourcesException;
 import com.tradingsystem.backend.exception.UserNotFoundException;
-import com.tradingsystem.backend.exception.WalletNotFoundException;
 import com.tradingsystem.backend.model.User;
-import com.tradingsystem.backend.repository.UserRepository;
-import com.tradingsystem.backend.dto.TransactionDTO;
-import org.springframework.stereotype.Service;
-
 import com.tradingsystem.backend.model.Wallet;
+import com.tradingsystem.backend.repository.UserRepository;
 import com.tradingsystem.backend.repository.WalletRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.tradingsystem.backend.dto.ActiveWallet.createActiveWallet;
 import static com.tradingsystem.backend.dto.NewWalletResponse.createWalletResponse;
@@ -23,7 +20,6 @@ import static com.tradingsystem.backend.exception.WalletNotFoundException.create
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -34,8 +30,13 @@ public class WalletService {
     private final UserRepository userRepository;
     private final RedisPublisherService redisPublisher;
 
+    @Transactional(readOnly = true)
+    public List<Wallet> getAllWallets() {
+        return walletRepository.findAll();
+    }
+
     @Transactional
-    public NewWalletResponse createWallet(Long userId, NewWalletRequest request){
+    public NewWalletResponse createWallet(Long userId, NewWalletRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::userNotFoundException);
 
@@ -44,20 +45,21 @@ public class WalletService {
                 .name(request.name())
                 .availableFunds(BigDecimal.ZERO)
                 .build();
+
         walletRepository.save(wallet);
 
         return createWalletResponse(wallet);
     }
 
     @Transactional
-    public void deleteWallet(Long walletId){
+    public void deleteWallet(Long walletId) {
         Wallet wallet = walletRepository.findById(walletId)
-            .orElseThrow(() -> createWalletNotFoundException(walletId));
+                .orElseThrow(() -> createWalletNotFoundException(walletId));
+
         wallet.setIsActive(false);
     }
 
-    // TODO: create mechanism for declaring bot strategy
-    public List<ActiveWallet> getActiveWallets(){
+    public List<ActiveWallet> getActiveWallets() {
         List<Wallet> wallets = walletRepository.findAllByActiveTrades(true);
         ActiveContext context = new ActiveContext("all", BigDecimal.valueOf(1000000));
 
@@ -67,7 +69,7 @@ public class WalletService {
     }
 
     @Transactional
-    public Boolean switchActivity(Long walletId){
+    public Boolean switchActivity(Long walletId) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> createWalletNotFoundException(walletId));
 
@@ -80,20 +82,25 @@ public class WalletService {
         } else {
             redisPublisher.notifyBotToStop(walletId, context);
         }
+
         return newStatus;
     }
 
     @Transactional(readOnly = true)
-    public List<WalletKeysDTO> getWalletsKeys(List<Long> walletIds){
+    public List<WalletKeysDTO> getWalletsKeys(List<Long> walletIds) {
         List<Wallet> wallets = walletRepository.findAllWithUserByIdIn(walletIds);
 
         return wallets.stream()
-                .map(wallet -> new WalletKeysDTO(wallet.getId(), wallet.getUser().getBinanceApiKey(), wallet.getUser().getBinanceSecretKey()))
+                .map(wallet -> new WalletKeysDTO(
+                        wallet.getId(),
+                        wallet.getUser().getBinanceApiKey(),
+                        wallet.getUser().getBinanceSecretKey()
+                ))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public Wallet updateWallet(Long walletId, TransactionDTO transaction){
+    public Wallet updateWallet(Long walletId, TransactionDTO transaction) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> createWalletNotFoundException(walletId));
 
@@ -101,10 +108,14 @@ public class WalletService {
         BigDecimal transactionCost = quantity.multiply(transaction.priceQty());
         BigDecimal walletFunds = wallet.getAvailableFunds();
 
-        if(transactionCost.compareTo(walletFunds) > 0){
-            throw new NotEnoughResourcesException("Transaction cost is: %s but wallet funds are: %s".formatted(transactionCost, walletFunds));
+        if (transactionCost.compareTo(walletFunds) > 0) {
+            throw new NotEnoughResourcesException(
+                    "Transaction cost is: %s but wallet funds are: %s".formatted(transactionCost, walletFunds)
+            );
         }
+
         wallet.setAvailableFunds(walletFunds.subtract(transactionCost));
+
         return wallet;
     }
 }

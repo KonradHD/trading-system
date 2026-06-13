@@ -1,7 +1,5 @@
 package com.tradingsystem.backend.controller;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.tradingsystem.backend.utils.ResponseMessage;
@@ -33,11 +31,16 @@ public class WalletController {
     private final WalletInventoryService walletInventoryService;
     private final WalletService walletService;
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllWallets() {
+        log.info("Received request for all wallets");
+        return ResponseEntity.status(HttpStatus.OK).body(walletService.getAllWallets());
+    }
 
     @GetMapping(value = "/{wallet_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> walletData(
-        @Parameter(description = "ID of the wallet to retrieve")
-        @PathVariable("wallet_id") Long walletId){
+            @Parameter(description = "ID of the wallet to retrieve")
+            @PathVariable("wallet_id") Long walletId) {
         log.info("Received request for wallet inventories data with id: {}", walletId);
 
         List<InventoryDTO> walletInventories = walletInventoryService.getWalletInventoriesDTO(walletId);
@@ -47,27 +50,30 @@ public class WalletController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NewWalletResponse> createWallet(
-        @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
-        @RequestBody(required = true) @Valid NewWalletRequest request
-    ){
+            @Parameter(hidden = true) @AuthenticationPrincipal Long userId,
+            @RequestBody(required = true) @Valid NewWalletRequest request
+    ) {
         log.info("Received request to create new wallet");
         NewWalletResponse newWallet = walletService.createWallet(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newWallet);
     }
 
     @DeleteMapping(value = "/{wallet_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> deleteWallet(@PathVariable(value="wallet_id") Long walletId){
+    public ResponseEntity<Void> deleteWallet(@PathVariable(value = "wallet_id") Long walletId) {
         log.info("Received request to delete wallet with id: {}", walletId);
 
         walletService.deleteWallet(walletId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value="/active/switch/{wallet_id}", produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> switchTradesActivity(@PathVariable(value="wallet_id") Long walletId){
+    @PutMapping(value = "/active/switch/{wallet_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> switchTradesActivity(@PathVariable(value = "wallet_id") Long walletId) {
         log.info("Received request to switch trades activity for wallet: {}", walletId);
         Boolean activityStatus = walletService.switchActivity(walletId);
-        String message = activityStatus ? "Bot trades for wallet: %s is now active.".formatted(walletId) : "Bot trades for wallet: %s is now disabled.".formatted(walletId);
+
+        String message = activityStatus
+                ? "Bot trades for wallet: %s is now active.".formatted(walletId)
+                : "Bot trades for wallet: %s is now disabled.".formatted(walletId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseMessage("Success", message)

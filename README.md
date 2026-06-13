@@ -30,6 +30,50 @@ This project implements a robust, stateless authentication system using **JSON W
 
 The Trading Bot is the core algorithmic engine of the application. Designed as an isolated, headless microservice, it should operate 24/7 to monitor the cryptocurrency market, evaluate trading strategies, and execute orders autonomously. By decoupling the bot from the user-facing web traffic, the system ensures zero-latency trade execution and high fault tolerance.
 
+## Trading strategy
+
+Currently, the trading bot implements a rule-based technical analysis strategy operating on real-time Binance market data.
+
+### Indicators
+
+The strategy evaluates three technical indicators:
+
+- **EMA 12 (Exponential Moving Average)** – a fast moving average reacting quickly to price changes.
+- **EMA 26 (Exponential Moving Average)** – a slower moving average used to identify the dominant market trend.
+- **RSI 14 (Relative Strength Index)** – a momentum indicator measuring market strength and potential overbought/oversold conditions.
+
+### Buy signal
+
+A BUY signal is generated when all of the following conditions are met:
+
+- EMA12 > EMA26 (bullish trend)
+- RSI is between 45 and 70
+- Current candle close price is higher than the previous candle close price
+
+This combination indicates a strengthening upward trend while avoiding heavily overbought market conditions.
+
+### Sell signal
+
+A SELL signal is generated when all of the following conditions are met:
+
+- EMA12 < EMA26 (bearish trend)
+- RSI is between 30 and 55
+- Current candle close price is lower than the previous candle close price
+
+This combination indicates a strengthening downward trend while avoiding heavily oversold market conditions.
+
+### Hold condition
+
+If neither BUY nor SELL conditions are satisfied, the strategy remains in HOLD state and no trade signal is generated.
+
+### Real-time execution
+
+The strategy is automatically executed whenever a new 1-minute candle is closed and received from the Binance WebSocket stream. Historical candle data is loaded from PostgreSQL and used to calculate EMA and RSI values before evaluating trading conditions.
+
+### Current status
+
+The strategy currently operates as a signal generation engine. Trade execution events are logged and can be forwarded to the order execution layer for real trading or paper-trading environments.
+
 ### Core Responsibilities
 
 - **Real-Time Data Ingestion:** maintains persistent WebSocket connections to the Binance API, continuously streaming live market data including Candles, Open Interest, and Funding Rates.

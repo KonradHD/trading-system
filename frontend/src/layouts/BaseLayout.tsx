@@ -35,6 +35,8 @@ export const BaseLayout = () => {
                     <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
                         <NavLink className={activeStatus} to={'/login'} end onClick={() => setIsMobileMenuOpen(false)}>Sign in</NavLink>
                         <NavLink className={activeStatus} to={'/register'} onClick={() => setIsMobileMenuOpen(false)}>Sign up</NavLink>
+                        <NavLink className={activeStatus} to={'/stock'} onClick={() => setIsMobileMenuOpen(false)}>Stock</NavLink>
+                        <NavLink className={activeStatus} to={'/analytics'} onClick={() => setIsMobileMenuOpen(false)}>Analytics</NavLink>
                     </div>
 
 
