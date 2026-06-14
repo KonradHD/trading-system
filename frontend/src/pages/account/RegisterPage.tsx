@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import RegistrationFormPersonal from "../../components/account/RegistrationFormPersonal";
 import { PASSWORD_RULES } from '../../services/validationRules'
-import { type UserData } from "../../services/Types";
+import type { UserData, RegistrationUser, RegistrationProfile} from "../../services/Types";
 import CredentialsForm from "../../components/account/CredentialsForm";
 import { useNavigate } from "react-router-dom";
 import RegistrationFormContact from "../../components/account/RegistrationFormContact";
 import './RegisterPage.css'
-import API_URL from "../../services/api";
+import { API_URL } from "../../services/api";
 // import type { TokenPayload } from "../components/Types";
 // import { getUserFromToken } from "../validationRules";
 // import { handleLogout } from "../services/api";
@@ -31,7 +31,7 @@ export default function RegisterPage() {
         surname: "",
         email: "",
         gender: "male",
-        dateofbirth: "",
+        dateOfBirth: "",
         city: "",
         address: "",
         phone: "",
@@ -65,31 +65,30 @@ export default function RegisterPage() {
         }
 
         try {
-            console.log("Saving registration data.");
+            console.log("Saving registration data...");
         
-            const data = {
+            const data : RegistrationUser= {
                 login: login,
                 password: password,
-                role: "user",
-                name: userData.name,
-                surname: userData.surname,
-                gender: userData.gender,
-                dateOfBirth: userData.dateofbirth,
-                city: userData.city,
-                address: userData.address,
-                phone: userData.phone,
-                pesel: userData.pesel,
-                email: userData.email,
-            }
-            
+                profile: {
+                    email: userData.email,
+                    name: userData.name,
+                    surname: userData.surname,
+                    gender: userData.gender,
+                    dateOfBirth: userData.dateOfBirth,
+                    city: userData.city,
+                    address: userData.address,
+                    phone: userData.phone,
+                    pesel: userData.pesel,
+                } as RegistrationProfile
+            };
 
-
-            const response = await fetch(`${API_URL}/register-user`, {
+            const response = await fetch(`${API_URL}/users`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data }),
+                body: JSON.stringify(data),
             });
 
             if (!response.ok) {
@@ -98,7 +97,7 @@ export default function RegisterPage() {
                 if (responseData.constraint === 'users_login_unique') {
                     setLoginError(true);
                 }
-                if (responseData.constraint === 'patients_email_unique') {
+                if (responseData.constraint === 'users_email_unique') {
                     setUserEmailError(true);
                     setStep(2);
                 }
@@ -110,12 +109,11 @@ export default function RegisterPage() {
                 throw new Error("Registration error.");
             }
 
-            const responseData = await response.json();
-            if (responseData.success) {
+            if (response.status === 201) {
                 alert(`Approved registration!`);
                 navigate(`/login`);
             } else {
-                alert('Registration unsucceeded.');
+                alert('Registration did not succeed.');
             }
 
         } catch (err) {
@@ -146,7 +144,7 @@ export default function RegisterPage() {
         const currentData : any = userData;
 
         if (step === 1) {
-            checkData = ["name", "surname", "gender", "dateofbirth", "pesel"];
+            checkData = ["name", "surname", "gender", "dateOfBirth", "pesel"];
         }
         if (step === 2) {
             checkData = ["email", "phone", "city", "address"];

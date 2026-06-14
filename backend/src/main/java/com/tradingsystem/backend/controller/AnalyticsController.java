@@ -2,6 +2,7 @@ package com.tradingsystem.backend.controller;
 
 import com.tradingsystem.backend.dto.AnalyticsDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,14 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("/api/analytics")
 @RequiredArgsConstructor
+@Slf4j
 public class AnalyticsController {
 
     private final JdbcTemplate jdbcTemplate;
 
     @GetMapping
     public AnalyticsDTO getGlobalAnalytics() {
+        log.info("Receive request for global statistics");
         return jdbcTemplate.queryForObject(
                 """
                 SELECT
@@ -38,6 +41,7 @@ public class AnalyticsController {
 
     @GetMapping("/wallet/{walletId}")
     public AnalyticsDTO getWalletAnalytics(@PathVariable Long walletId) {
+        log.info("Receive request for statistics for wallet: {}", walletId);
         return jdbcTemplate.queryForObject(
                 """
                 SELECT

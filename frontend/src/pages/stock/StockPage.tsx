@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API_URL from "../../services/api";
+import { API_URL } from "../../services/api";
+import "./StockPage.css";
 
 type StockSymbol = {
     symbol: string;
@@ -19,29 +20,23 @@ export const StockPage = () => {
     }, []);
 
     if (loading) {
-        return <section style={{ padding: "2rem" }}>Loading stock market...</section>;
+        return <section className="stock-loading-state">Loading stock market...</section>;
     }
 
     return (
-        <section style={{ padding: "2rem" }}>
-            <h1>Stock market</h1>
-            <p>List of available cryptocurrency markets from backend database.</p>
+        <section className="stock-page">
+            <h1 className="page-title">Stock market</h1>
+            <p className="page-desc">List of available cryptocurrency markets from backend database.</p>
 
-            <div style={{ display: "grid", gap: "1rem", marginTop: "1.5rem" }}>
+            <div className="symbols-grid">
                 {symbols.map((item) => (
                     <Link
                         key={item.symbol}
                         to={`/stock/${item.symbol}`}
-                        style={{
-                            padding: "1rem",
-                            border: "1px solid #ddd",
-                            borderRadius: "10px",
-                            textDecoration: "none",
-                            color: "inherit",
-                        }}
+                        className="symbol-card"
                     >
-                        <strong>{item.symbol}</strong>
-                        <p>Open market details</p>
+                        <strong className="symbol-name">{item.symbol}</strong>
+                        <span className="symbol-action">Open market details <span>→</span></span>
                     </Link>
                 ))}
             </div>

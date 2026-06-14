@@ -9,7 +9,9 @@ import { ProtectedRoute } from "./middleware/ProtectedRoute";
 import { StockPage } from "./pages/stock/StockPage";
 import { StockDetailsPage } from "./pages/stock/StockDetailsPage";
 import { WalletDetailsPage } from "./pages/wallets/WalletDetailsPage";
+import { WalletsPage } from "./pages/wallets/WalletsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
+import { ProfilePage } from "./pages/account/ProfilePage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -35,10 +37,6 @@ const router = createBrowserRouter([
             {
                 path: "analytics",
                 element: <AnalyticsPage />
-            },
-            {
-                path: "wallets/:id",
-                element: <WalletDetailsPage />
             }
         ]
     },
@@ -60,6 +58,30 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <HomePage />
+                    },
+                    {
+                        path: "stock",
+                        element: <StockPage />
+                    },
+                    {
+                        path: "stock/:symbol",
+                        element: <StockDetailsPage />
+                    },
+                    {
+                        path: "analytics",
+                        element: <AnalyticsPage />
+                    },
+                    {
+                        path: "wallets",
+                        element: <WalletsPage/>
+                    },
+                    {
+                        path: "wallets/:wallet_id",
+                        element: <WalletDetailsPage />
+                    },
+                    {
+                        path:"profile",
+                        element: <ProfilePage />
                     }
                 ]
             }

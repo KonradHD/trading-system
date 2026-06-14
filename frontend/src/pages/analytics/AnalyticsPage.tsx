@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import API_URL from "../../services/api";
+import { API_URL } from "../../services/api";
+import "./AnalyticsPage.css";
 
 type Analytics = {
     totalTrades: number;
@@ -20,7 +21,6 @@ export const AnalyticsPage = () => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch analytics");
                 }
-
                 return response.json();
             })
             .then((data) => setAnalytics(data))
@@ -29,14 +29,16 @@ export const AnalyticsPage = () => {
     }, []);
 
     if (loading) {
-        return <section style={{ padding: "2rem" }}>Loading analytics...</section>;
+        return <section className="analytics-loading-state">Loading analytics...</section>;
     }
 
     if (error) {
         return (
-            <section style={{ padding: "2rem" }}>
-                <h1>Analytics</h1>
-                <p>{error}</p>
+            <section className="analytics-page">
+                <h1 className="page-title">Analytics</h1>
+                <div className="error-card">
+                    <p>{error}</p>
+                </div>
             </section>
         );
     }
@@ -44,36 +46,35 @@ export const AnalyticsPage = () => {
     const hasTrades = (analytics?.totalTrades ?? 0) > 0;
 
     return (
-        <section style={{ padding: "2rem" }}>
-            <h1>Analytics</h1>
-            <p>Trading strategy statistics from backend database.</p>
+        <section className="analytics-page">
+            <h1 className="page-title">Analytics</h1>
+            <p className="page-desc">Trading strategy statistics from backend database.</p>
 
             {!hasTrades && (
-                <div style={{
-                    padding: "1rem",
-                    border: "1px solid #ddd",
-                    borderRadius: "10px",
-                    marginTop: "1.5rem"
-                }}>
-                    <h2>No trading data yet</h2>
-                    <p>
-                        Analytics endpoint is working, but there are no saved transactions in the database yet.
-                    </p>
+                <div className="data-card empty-state-card">
+                    <h2 className="card-title">No trading data yet</h2>
+                    <div className="card-content">
+                        <p>Analytics endpoint is working, but there are no saved transactions in the database yet.</p>
+                    </div>
                 </div>
             )}
 
-            <div style={{ display: "grid", gap: "1rem", marginTop: "1.5rem" }}>
-                <div style={{ padding: "1rem", border: "1px solid #ddd", borderRadius: "10px" }}>
-                    <h2>Trades</h2>
-                    <p>Total trades: {analytics?.totalTrades ?? 0}</p>
-                    <p>BUY signals: {analytics?.buyTrades ?? 0}</p>
-                    <p>SELL signals: {analytics?.sellTrades ?? 0}</p>
+            <div className="analytics-grid">
+                <div className="data-card">
+                    <h2 className="card-title">Trades</h2>
+                    <div className="card-content">
+                        <p><span>Total trades:</span> <strong>{analytics?.totalTrades ?? 0}</strong></p>
+                        <p><span>BUY signals:</span> <strong>{analytics?.buyTrades ?? 0}</strong></p>
+                        <p><span>SELL signals:</span> <strong>{analytics?.sellTrades ?? 0}</strong></p>
+                    </div>
                 </div>
 
-                <div style={{ padding: "1rem", border: "1px solid #ddd", borderRadius: "10px" }}>
-                    <h2>Volume</h2>
-                    <p>Total volume: {analytics?.totalVolume ?? 0}</p>
-                    <p>Average price: {analytics?.averagePrice ?? 0}</p>
+                <div className="data-card">
+                    <h2 className="card-title">Volume</h2>
+                    <div className="card-content">
+                        <p><span>Total volume:</span> <strong>{analytics?.totalVolume ?? 0}</strong></p>
+                        <p><span>Average price:</span> <strong>${analytics?.averagePrice ?? 0}</strong></p>
+                    </div>
                 </div>
             </div>
         </section>

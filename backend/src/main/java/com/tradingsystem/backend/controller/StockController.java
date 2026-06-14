@@ -3,6 +3,7 @@ package com.tradingsystem.backend.controller;
 import com.tradingsystem.backend.dto.CandleDTO;
 import com.tradingsystem.backend.dto.StockSymbolDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +12,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/stock")
 @RequiredArgsConstructor
+@Slf4j
 public class StockController {
 
     private final JdbcTemplate jdbcTemplate;
 
     @GetMapping
     public List<StockSymbolDTO> getAvailableSymbols() {
+        log.info("Receive request for available symbols");
         return jdbcTemplate.query(
                 """
                 SELECT DISTINCT symbol
@@ -34,6 +37,7 @@ public class StockController {
             @PathVariable String symbol,
             @RequestParam(defaultValue = "100") int limit
     ) {
+        log.info("Receive request for candles data for symbol: {}", symbol);
         return jdbcTemplate.query(
                 """
                 SELECT symbol, open_price, high_price, low_price, close_price, volume, open_time, close_time

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record UserLogin (
     @NotBlank(message = "Username is required") String login,
     @NotBlank(message = "Password is required") @ValidPassword String password,
-    @Size(max=50) String deviceInfo
+    @Size(max=255) String deviceInfo
 ){
 
 }

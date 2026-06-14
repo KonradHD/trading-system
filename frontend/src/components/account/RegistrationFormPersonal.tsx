@@ -70,8 +70,8 @@ export default function RegistrationFormPersonal({ data, onUpdate, peselError }:
                 <label>Date of birth:</label>
                 <input
                     type="date"
-                    value={data.dateofbirth}
-                    onChange={(e) => onUpdate("dateofbirth", e.target.value)}
+                    value={data.dateOfBirth}
+                    onChange={(e) => onUpdate("dateOfBirth", e.target.value)}
                     className="std-input"
                     required
                 />

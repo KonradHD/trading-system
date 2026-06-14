@@ -1,0 +1,138 @@
+.stock-page {
+    padding: 3rem;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 2rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stock-loading-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--accent);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.page-title {
+    font-size: 3rem;
+    color: var(--text-h);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.page-desc {
+    color: var(--text);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.symbols-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.symbol-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.symbol-card:hover {
+    border-color: var(--accent);
+    background-color: var(--bg);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px var(--accent-bg);
+}
+
+.symbol-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    transform-origin: bottom;
+}
+
+.symbol-card:hover::before {
+    transform: scaleY(1);
+}
+
+.symbol-name {
+    font-size: 1.5rem;
+    color: var(--text-h);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.symbol-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+.symbol-card:hover .symbol-action {
+    color: var(--accent);
+}
+
+.symbol-action span {
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.symbol-card:hover .symbol-action span {
+    transform: translateX(5px);
+}
+
+@media (max-width: 640px) {
+    .stock-page {
+        padding: 1rem;
+    }
+
+    .symbols-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

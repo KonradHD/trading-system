@@ -5,9 +5,27 @@ export type UserData = {
     surname: string;
     email: string,
     gender: gender;
-    dateofbirth: string;
+    dateOfBirth: string;
     city: string;
     address: string,
     phone: string,
     pesel: string,
 };
+
+export type RegistrationProfile = {
+    email: string,
+    name: string;
+    surname: string;
+    gender: gender;
+    dateOfBirth: string;
+    city: string;
+    address: string,
+    phone: string,
+    pesel: string,
+}
+
+export type RegistrationUser = {
+    login: string,
+    password: string,
+    profile: RegistrationProfile,
+}

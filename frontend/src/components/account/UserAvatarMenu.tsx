@@ -40,23 +40,23 @@ export default function UserAvatarMenu({ isDropdownOpen, setIsDropdownOpen }: Us
             {isDropdownOpen && (
                 <div className="dropdown-menu">
                     <div className="dropdown-item-name" style={{ fontWeight: 'bold', borderBottom: '1px solid #eee', marginBottom: '5px' }}>
-                        u are logout
+                        Logged in
                     </div>
+
+                    <NavLink
+                        to={"profile"}
+                        className="dropdown-item"
+                        onClick={() => setIsDropdownOpen(false)}
+                    >
+                        Profile
+                    </NavLink>
 
                     <NavLink
                         to="/login"
                         className="dropdown-item"
                         onClick={() => setIsDropdownOpen(false)}
                     >
-                        Sing in
-                    </NavLink>
-
-                    <NavLink
-                        to="/register"
-                        className="dropdown-item"
-                        onClick={() => setIsDropdownOpen(false)}
-                    >
-                        Sing up
+                        Logout
                     </NavLink>
                 </div>
             )}

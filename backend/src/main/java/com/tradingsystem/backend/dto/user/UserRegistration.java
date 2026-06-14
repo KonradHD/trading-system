@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UserRegistration (
     
-    @NotBlank String login,
-    @NotBlank @ValidPassword String password,
+    @NotBlank(message = "Login cannot be blank") String login,
+    @NotBlank(message = "Password cannot be blank") @ValidPassword String password,
     @JsonProperty("profile") @Valid RegistrationProfile profile
 ){
 

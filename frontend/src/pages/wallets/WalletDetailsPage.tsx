@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import API_URL from "../../services/api";
+import { API_URL } from "../../services/api";
 
 type Inventory = {
     symbol: string;

@@ -1,8 +1,8 @@
-import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API_URL from "../../services/api";
+import { AUTH_URL } from "../../services/api";
 import { useEffect } from "react";
+import { UAParser } from "ua-parser-js";
 // import { handleLogout } from "../services/api";
 // import type { TokenPayload } from "../components/Types";
 // import { getUserFromToken } from "../validationRules";
@@ -10,12 +10,11 @@ import './LoginPage.css';
 
 
 export default function LoginPage() {
-    const [params] = useSearchParams();
     const navigate = useNavigate();
-    const role = params.get("role");
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const [deviceInfo, setDeviceInfo] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     // const [userInfo, setUserInfo] = useState<TokenPayload | null>(getUserFromToken());
@@ -26,6 +25,17 @@ export default function LoginPage() {
     //     }
     // }, [])
 
+    useEffect(() => {
+        const parser = new UAParser();
+        const result = parser.getResult();
+        const browser = `${result.browser.name} ${result.browser.version}`;
+        const os = `${result.os.name} ${result.os.version}`;
+        const device = result.device.type ? result.device.type : "desktop";
+        const cleanDeviceInfo = `${browser} on ${os} (${device})`;
+
+        setDeviceInfo(cleanDeviceInfo);
+    }, []);
+
 
     async function handleLogin(event: React.FormEvent) {
         event.preventDefault();
@@ -34,12 +44,12 @@ export default function LoginPage() {
 
         try {
 
-            const response = await fetch(`${API_URL}/login`, {
+            const response = await fetch(`${AUTH_URL}/login`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ login: login, password: password, role: role }),
+                body: JSON.stringify({ login: login, password: password, deviceInfo: deviceInfo }),
             });
 
             let responseData;
