@@ -52,6 +52,14 @@ export default function UserAvatarMenu({ isDropdownOpen, setIsDropdownOpen }: Us
                     </NavLink>
 
                     <NavLink
+                        to={"settings"}
+                        className="dropdown-item"
+                        onClick={() => setIsDropdownOpen(false)}
+                    >
+                        Settings
+                    </NavLink>
+
+                    <NavLink
                         to="/login"
                         className="dropdown-item"
                         onClick={() => setIsDropdownOpen(false)}

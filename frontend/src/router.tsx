@@ -12,6 +12,7 @@ import { WalletDetailsPage } from "./pages/wallets/WalletDetailsPage";
 import { WalletsPage } from "./pages/wallets/WalletsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
 import { ProfilePage } from "./pages/account/ProfilePage.tsx";
+import { SettingsPage } from "./pages/account/SettingsPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
                     {
                         path:"profile",
                         element: <ProfilePage />
+                    },
+                    {
+                        path: "settings",
+                        element: <SettingsPage />
                     }
                 ]
             }

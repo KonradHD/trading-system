@@ -12,7 +12,7 @@ export type UserData = {
     pesel: string,
 };
 
-export type RegistrationProfile = {
+export type Profile = {
     email: string,
     name: string;
     surname: string;
@@ -24,8 +24,19 @@ export type RegistrationProfile = {
     pesel: string,
 }
 
+export type DisplayableProfile = {
+    email: string,
+    name: string;
+    surname: string;
+    gender: gender;
+    dateOfBirth: string;
+    city: string;
+    address: string,
+    phone: string
+}
+
 export type RegistrationUser = {
     login: string,
     password: string,
-    profile: RegistrationProfile,
+    profile: Profile,
 }

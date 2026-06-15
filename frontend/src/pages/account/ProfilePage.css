@@ -1,0 +1,127 @@
+.profile-page {
+    padding: 2rem;
+    max-width: 1440px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.profile-loading-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--accent);
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: pulse 1.5s infinite;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+
+.page-title {
+    font-size: 3rem;
+    color: var(--text-h);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.page-desc {
+    color: var(--text);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.data-card {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.data-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.card-title {
+    color: var(--text-h);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.5rem;
+}
+
+.card-content p {
+    color: var(--text);
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.card-content p:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.card-content strong {
+    color: var(--text-h);
+    text-align: right;
+    max-width: 60%;
+}
+
+.error-card {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .profile-page {
+        padding: 1rem;
+    }
+
+    .data-card {
+        padding: 1.25rem;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-content p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .card-content strong {
+        text-align: left;
+        max-width: 100%;
+    }
+}
