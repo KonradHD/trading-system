@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import RegistrationFormPersonal from "../../components/account/RegistrationFormPersonal";
 import { PASSWORD_RULES } from '../../services/validationRules'
-import type { UserData, RegistrationUser, RegistrationProfile} from "../../services/Types";
+import type { UserData, RegistrationUser, Profile} from "../../services/Types";
 import CredentialsForm from "../../components/account/CredentialsForm";
 import { useNavigate } from "react-router-dom";
 import RegistrationFormContact from "../../components/account/RegistrationFormContact";
@@ -80,7 +80,7 @@ export default function RegisterPage() {
                     address: userData.address,
                     phone: userData.phone,
                     pesel: userData.pesel,
-                } as RegistrationProfile
+                } as Profile
             };
 
             const response = await fetch(`${API_URL}/users`, {

@@ -10,6 +10,8 @@ import { StockPage } from "./pages/stock/StockPage";
 import { StockDetailsPage } from "./pages/stock/StockDetailsPage";
 import { WalletDetailsPage } from "./pages/wallets/WalletDetailsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
+import { ProfilePage } from "./pages/account/ProfilePage.tsx";
+import { SettingsPage } from "./pages/account/SettingsPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <HomePage />
+                    },
+                    {
+                        path: "profile",
+                        element: <ProfilePage />
+                    },
+                    {
+                        path: "settings",
+                        element: <SettingsPage />
                     }
                 ]
             },
