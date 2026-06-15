@@ -9,9 +9,7 @@ import { ProtectedRoute } from "./middleware/ProtectedRoute";
 import { StockPage } from "./pages/stock/StockPage";
 import { StockDetailsPage } from "./pages/stock/StockDetailsPage";
 import { WalletDetailsPage } from "./pages/wallets/WalletDetailsPage";
-import { WalletsPage } from "./pages/wallets/WalletsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
-import { ProfilePage } from "./pages/account/ProfilePage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -25,18 +23,6 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <WelcomePage />
-            },
-            {
-                path: "stock",
-                element: <StockPage />
-            },
-            {
-                path: "stock/:symbol",
-                element: <StockDetailsPage />
-            },
-            {
-                path: "analytics",
-                element: <AnalyticsPage />
             }
         ]
     },
@@ -58,30 +44,40 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <HomePage />
-                    },
+                    }
+                ]
+            },
+            {
+                path: "/stock",
+                element: <BaseLayout />,
+                children: [
                     {
-                        path: "stock",
+                        index: true,
                         element: <StockPage />
                     },
                     {
-                        path: "stock/:symbol",
+                        path: ":symbol",
                         element: <StockDetailsPage />
-                    },
+                    }
+                ]
+            },
+            {
+                path: "/analytics",
+                element: <BaseLayout />,
+                children: [
                     {
-                        path: "analytics",
+                        index: true,
                         element: <AnalyticsPage />
-                    },
+                    }
+                ]
+            },
+            {
+                path: "/wallets/:id",
+                element: <BaseLayout />,
+                children: [
                     {
-                        path: "wallets",
-                        element: <WalletsPage/>
-                    },
-                    {
-                        path: "wallets/:wallet_id",
+                        index: true,
                         element: <WalletDetailsPage />
-                    },
-                    {
-                        path:"profile",
-                        element: <ProfilePage />
                     }
                 ]
             }

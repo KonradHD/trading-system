@@ -46,6 +46,7 @@ export default function LoginPage() {
 
             const response = await fetch(`${AUTH_URL}/login`, {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -71,7 +72,6 @@ export default function LoginPage() {
 
             alert(`Approved singing in!`);
             localStorage.setItem('token', responseData.accessToken);
-            localStorage.setItem('refreshToken', responseData.refreshToken);
             navigate("/home");
 
         } catch (err: any) {

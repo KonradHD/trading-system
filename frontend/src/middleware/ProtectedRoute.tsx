@@ -1,64 +1,46 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-// import { isTokenValid } from "../validationRules";
-// import { handleLogout, refreshTokenFetch } from "../services/api";
-import { useRef } from "react";
-
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { getAccessToken, refreshTokenFetch, handleLogout } from "../services/api";
 
 export const ProtectedRoute = () => {
     const location = useLocation();
 
-    // const isTokenValidNow = isTokenValid();
-    const [refreshFailed, setRefreshFailed] = useState(false);
-    const [_, setForceUpdate] = useState(0);
-    const hasFetched = useRef(false);
+    const [checking, setChecking] = useState(true);
+    const [allowed, setAllowed] = useState(false);
 
-    // useEffect(() => {
-    //     setRefreshFailed(false);
+    useEffect(() => {
+        const checkSession = async () => {
+            const token = getAccessToken();
 
-    //     if (isTokenValid()) return;
+            if (token) {
+                setAllowed(true);
+                setChecking(false);
+                return;
+            }
 
-    //     if (hasFetched.current) {
-    //         console.log("Odświeżanie już trwa. Czekam...");
-    //         return;
-    //     }
-    //     hasFetched.current = true;
+            const refreshResult = await refreshTokenFetch();
 
-    //     console.log("Token wymaga odświeżenia. Blokuję...");
-    //     const restore = async () => {
-    //         try {
+            if (refreshResult.success) {
+                setAllowed(true);
+                setChecking(false);
+                return;
+            }
 
-    //             const response = await refreshTokenFetch();
+            setAllowed(false);
+            setChecking(false);
+        };
 
-    //             if (!response?.success) {
-    //                 console.log("Refresh nieudany");
-    //                 setRefreshFailed(true);
-    //             } else {
-    //                 console.log("Refresh udany.");
-    //                 // wymuszenie re-renderingu
-    //                 setForceUpdate(prev => prev + 1);
-    //             }
-    //         } catch (e) {
-    //             console.error(e);
-    //             setRefreshFailed(true);
-    //         } finally {
-    //             hasFetched.current = false;
-    //         }
-    //     };
+        checkSession();
+    }, [location.pathname]);
 
-    //     restore();
+    if (checking) {
+        return <div className="loading-screen">Checking session...</div>;
+    }
 
-    // }, [location.pathname]);
-
-
-    // if (refreshFailed) {
-    //     handleLogout();
-    // }
-
-    // // Blokada widoku
-    // if (!isTokenValidNow) {
-    //     return <div className="loading-screen">Odświeżanie sesji...</div>;
-    // }
+    if (!allowed) {
+        handleLogout();
+        return <Navigate to="/login" replace />;
+    }
 
     return <Outlet />;
 };
