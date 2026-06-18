@@ -4,9 +4,11 @@ SELECT
     w.user_id,
     COUNT(t.id) AS total_trades,
     COALESCE(SUM(c.commission_value), 0) AS total_commissions_paid,
-    -- sprzedaż - kupno
-    SUM(CASE WHEN t.action = 'SELL' THEN (t.price_qty * t.quantity) ELSE 0 END) -
-    SUM(CASE WHEN t.action = 'BUY' THEN (t.price_qty * t.quantity) ELSE 0 END) AS volume_balance
+    -- (sprzedaż - kupno)
+    CAST(
+        SUM(CASE WHEN t.action = 'SELL' THEN (t.price_qty * t.quantity) ELSE 0 END) -
+        SUM(CASE WHEN t.action = 'BUY' THEN (t.price_qty * t.quantity) ELSE 0 END) AS NUMERIC(24, 8))
+    AS volume_balance
 FROM
     wallets w
         LEFT JOIN
