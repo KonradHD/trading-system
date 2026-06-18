@@ -6,11 +6,13 @@ import { UAParser } from "ua-parser-js";
 // import { handleLogout } from "../services/api";
 // import type { TokenPayload } from "../components/Types";
 // import { getUserFromToken } from "../validationRules";
+import { useAuth } from '../../services/AuthProvider.tsx'
 import './LoginPage.css';
 
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { setAuthToken } = useAuth();
 
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -43,39 +45,37 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-
             const response = await fetch(`${AUTH_URL}/login`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ login: login, password: password, deviceInfo: deviceInfo }),
+                body: JSON.stringify({ login, password, deviceInfo }),
             });
 
-            let responseData;
+            const responseData = await response.json();
 
             if (!response.ok) {
-                responseData = await response.json();
-
-                if (!responseData.success) {
-                    throw new Error(responseData.message);
-                }
-                throw new Error("Login error");
+                throw new Error(responseData.message || "Błąd logowania. Sprawdź dane.");
             }
-
-            responseData = await response.json();
 
             if (!responseData.accessToken) {
-                throw new Error("Invalid access token.");
+                throw new Error("Brak access tokena w odpowiedzi serwera.");
             }
 
-            alert(`Approved singing in!`);
-            localStorage.setItem('token', responseData.accessToken);
+            const tokenString = typeof responseData.accessToken === 'string'
+                ? responseData.accessToken
+                : responseData.accessToken.value;
+
+            setAuthToken(tokenString);
+            console.log("Cookie token was saved!");
+
+            alert(`Zalogowano pomyślnie!`);
             navigate("/home");
 
         } catch (err: any) {
-            console.log(err);
+            console.error("Login failed:", err);
             setError(err.message);
         } finally {
             setLoading(false);

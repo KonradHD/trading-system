@@ -1,3 +1,4 @@
+/*
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { getAccessToken, refreshTokenFetch, handleLogout } from "../services/api";
@@ -42,5 +43,21 @@ export const ProtectedRoute = () => {
         return <Navigate to="/login" replace />;
     }
 
+    return <Outlet />;
+};*/
+
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../services/AuthProvider";
+
+export const ProtectedRoute = () => {
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Ładowanie sesji...</div>;
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
     return <Outlet />;
 };

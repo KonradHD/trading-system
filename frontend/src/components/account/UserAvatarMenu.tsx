@@ -1,6 +1,8 @@
-import { NavLink } from "react-router-dom"
+import {NavLink, useNavigate} from "react-router-dom"
 import { useEffect, useRef } from "react";
 import './UserAvatarMenu.css'
+import {handleLogout} from "../../services/api.ts";
+import {useAuth} from "../../services/AuthProvider.tsx";
 
 type UserAvatarMenuProps = {
     isDropdownOpen: boolean,
@@ -9,7 +11,8 @@ type UserAvatarMenuProps = {
 
 export default function UserAvatarMenu({ isDropdownOpen, setIsDropdownOpen }: UserAvatarMenuProps) {
     const menuRef = useRef<HTMLDivElement>(null);
-
+    const { setAuthToken } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -62,7 +65,10 @@ export default function UserAvatarMenu({ isDropdownOpen, setIsDropdownOpen }: Us
                     <NavLink
                         to="/login"
                         className="dropdown-item"
-                        onClick={() => setIsDropdownOpen(false)}
+                        onClick={() => {
+                            setIsDropdownOpen(false);
+                            handleLogout(setAuthToken, navigate);
+                        }}
                     >
                         Logout
                     </NavLink>

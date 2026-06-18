@@ -12,6 +12,7 @@ import { WalletDetailsPage } from "./pages/wallets/WalletDetailsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
 import { ProfilePage } from "./pages/account/ProfilePage.tsx";
 import { SettingsPage } from "./pages/account/SettingsPage.tsx";
+import {WalletsPage} from "./pages/wallets/WalletsPage.tsx";
 
 const router = createBrowserRouter([
     {
@@ -54,39 +55,25 @@ const router = createBrowserRouter([
                     {
                         path: "settings",
                         element: <SettingsPage />
-                    }
-                ]
-            },
-            {
-                path: "/stock",
-                element: <BaseLayout />,
-                children: [
+                    },
                     {
-                        index: true,
+                        path: "stock",
                         element: <StockPage />
                     },
                     {
-                        path: ":symbol",
+                        path: "stock/:symbol",
                         element: <StockDetailsPage />
-                    }
-                ]
-            },
-            {
-                path: "/analytics",
-                element: <BaseLayout />,
-                children: [
+                    },
                     {
-                        index: true,
+                        path: "analytics",
                         element: <AnalyticsPage />
-                    }
-                ]
-            },
-            {
-                path: "/wallets/:id",
-                element: <BaseLayout />,
-                children: [
+                    },
                     {
-                        index: true,
+                        path: "wallets",
+                        element: <WalletsPage />
+                    },
+                    {
+                        path: "wallets/:id",
                         element: <WalletDetailsPage />
                     }
                 ]

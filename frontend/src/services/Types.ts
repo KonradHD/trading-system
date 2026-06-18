@@ -40,3 +40,10 @@ export type RegistrationUser = {
     password: string,
     profile: Profile,
 }
+
+export interface AuthContextType {
+    token: string | null;
+    setAuthToken: (token: string | null) => void;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+}

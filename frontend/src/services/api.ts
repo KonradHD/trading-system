@@ -1,9 +1,12 @@
+import {useAuth} from "./AuthProvider.tsx";
+import {useNavigate} from "react-router-dom";
+
 const API_URL = "http://localhost:8080/api";
 const AUTH_URL = "http://localhost:8080/auth";
 
 export { API_URL, AUTH_URL };
 
-export const getAccessToken = () => {
+/*export const getAccessToken = () => {
     return localStorage.getItem("token");
 };
 
@@ -14,9 +17,26 @@ export const saveAccessToken = (token: string) => {
 export const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
+};*/
+
+export const handleLogout = async (
+    setAuthToken: (token: string | null) => void,
+    navigate: (path: string) => void
+) => {
+    try {
+        // await fetch('http://localhost:8080/api/auth/logout', {
+        //     method: 'POST',
+        // });
+    } catch (error) {
+        console.error("Błąd sieciowy podczas wylogowywania");
+    } finally {
+        setAuthToken(null);
+        console.log("Cookie token was removed!");
+        navigate("/login");
+    }
 };
 
-export const refreshTokenFetch = async () => {
+/*export const refreshTokenFetch = async () => {
     const response = await fetch(`${AUTH_URL}/refresh`, {
         method: "POST",
         credentials: "include",
@@ -70,4 +90,4 @@ export const authFetch = async (url: string, options: RequestInit = {}) => {
     });
 
     return response;
-};
+};*/
