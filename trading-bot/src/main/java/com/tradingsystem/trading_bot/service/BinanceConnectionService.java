@@ -1,6 +1,8 @@
 package com.tradingsystem.trading_bot.service;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
@@ -27,14 +29,28 @@ public class BinanceConnectionService implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("Binance connection service is starting...");
+        List<String> cryptoSymbols = Arrays.asList(
+                "btcusdt", "ethusdt", "bnbusdt", "solusdt", "xrpusdt",
+                "adausdt", "dogeusdt", "avaxusdt", "linkusdt", "dotusdt",
+                "ltcusdt", "shibusdt", "trxusdt", "uniusdt", "atomusdt",
+                "etcusdt", "xlmusdt", "nearusdt", "aptusdt", "filusdt"
+        );
 
-        URI websocketCandlesUrl = BinanceAPIUrlBuilder.streamCandleEndpoint("btcusdt", "1m");
-        URI historicalCandlesUrl = BinanceAPIUrlBuilder.httpCandleEndpoint("btcusdt", "1m", 100);
+        for (String symbol : cryptoSymbols) {
+            log.info("Inicjalizacja danych i strumienia dla symbolu: {}", symbol);
 
-        disposableHttpClient.historicalCandles(historicalCandlesUrl);
-        socketClient.connect(websocketCandlesUrl);
+            URI historicalCandlesUrl = BinanceAPIUrlBuilder.httpCandleEndpoint(symbol, "1m", 100);
+            URI websocketCandlesUrl = BinanceAPIUrlBuilder.streamCandleEndpoint(symbol, "1m");
 
-        log.info("Historical candles loaded and websocket candle stream connected.");
+            try {
+                disposableHttpClient.historicalCandles(historicalCandlesUrl);
+                socketClient.connect(websocketCandlesUrl);
+            } catch (Exception e) {
+                log.error("Wystąpił błąd podczas inicjalizacji dla symbolu {}: {}", symbol, e.getMessage());
+            }
+        }
+
+        log.info("Zakończono pobieranie świec historycznych i podłączanie strumieni WebSocket dla wszystkich {} symboli.", cryptoSymbols.size());
     }
 
     @Scheduled(fixedRateString = "${cyclic.http.time}")

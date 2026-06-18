@@ -35,7 +35,7 @@ export const StockPage = () => {
                         to={`${item.symbol}`}
                         className="symbol-card"
                     >
-                        <strong className="symbol-name">{item.symbol}</strong>
+                        <strong className="symbol-name">{item.symbol.substring(0, item.symbol.length - 4)}</strong>
                         <span className="symbol-action">Open market details <span>→</span></span>
                     </Link>
                 ))}

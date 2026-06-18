@@ -47,3 +47,11 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
 }
+
+export type Wallet = {
+    walletId: number;
+    walletName: string;
+    isActive: boolean;
+    availableFunds: number;
+    activeTrades: boolean;
+};

@@ -2,6 +2,8 @@ package com.tradingsystem.backend.controller;
 
 import java.util.List;
 
+import com.tradingsystem.backend.model.Wallet;
+import com.tradingsystem.backend.repository.WalletRepository;
 import com.tradingsystem.backend.utils.ResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import com.tradingsystem.backend.dto.InventoryDTO;
 import com.tradingsystem.backend.dto.NewWalletRequest;
 import com.tradingsystem.backend.dto.NewWalletResponse;
+
+import static com.tradingsystem.backend.dto.WalletListDTO.createWalletsListDTO;
 import static com.tradingsystem.backend.dto.WalletsResponse.createWalletsResponse;
 import com.tradingsystem.backend.service.WalletInventoryService;
 import com.tradingsystem.backend.service.WalletService;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,13 +43,22 @@ public class WalletController {
 
     @GetMapping(value = "/{wallet_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> walletData(
+            @AuthenticationPrincipal Long userId,
             @Parameter(description = "ID of the wallet to retrieve")
             @PathVariable("wallet_id") Long walletId) {
         log.info("Received request for wallet inventories data with id: {}", walletId);
-
+        Wallet wallet = walletService.getWallet(walletId);
         List<InventoryDTO> walletInventories = walletInventoryService.getWalletInventoriesDTO(walletId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(createWalletsResponse(walletId, walletInventories));
+        return ResponseEntity.status(HttpStatus.OK).body(createWalletsResponse(wallet, walletInventories));
+    }
+
+    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> walletsList(@AuthenticationPrincipal Long userId) {
+        log.info("Received request for wallets data for user: {}", userId);
+
+        List<Wallet> wallets = walletService.getWallets(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(createWalletsListDTO(wallets));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -81,13 +81,13 @@ export const StockDetailsPage = () => {
         <section className="stock-details-page">
             <Link to="/stock" className="back-link">← Back to stock list</Link>
 
-            <h1 className="page-title">{symbol}</h1>
+            <h1 className="page-title">{symbol?.substring(0, symbol.length - 4)}</h1>
             <p className="page-desc">Cryptocurrency market details from backend database.</p>
 
             <div className="data-card">
                 <h2 className="card-title">Market data</h2>
                 <div className="card-content">
-                    <p>Symbol: <strong>{symbol}</strong></p>
+                    <p>Symbol: <strong>{symbol?.substring(0, symbol.length - 4)}</strong></p>
                     <p>Current price: <strong>{latestCandle ? `${latestCandle.closePrice} USDT` : "No data"}</strong></p>
                     <p>Volume: <strong>{latestCandle ? latestCandle.volume : "No data"}</strong></p>
                 </div>

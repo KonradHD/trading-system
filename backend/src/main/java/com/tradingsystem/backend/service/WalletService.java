@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.tradingsystem.backend.controller.WalletController;
 import com.tradingsystem.backend.dto.*;
 import com.tradingsystem.backend.exception.NotEnoughResourcesException;
 import com.tradingsystem.backend.exception.UserNotFoundException;
+import com.tradingsystem.backend.exception.WalletNotFoundException;
 import com.tradingsystem.backend.model.User;
 import com.tradingsystem.backend.model.Wallet;
 import com.tradingsystem.backend.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.tradingsystem.backend.dto.ActiveWallet.createActiveWallet;
 import static com.tradingsystem.backend.dto.NewWalletResponse.createWalletResponse;
+import static com.tradingsystem.backend.exception.UserNotFoundException.userNotFoundException;
 import static com.tradingsystem.backend.exception.WalletNotFoundException.createWalletNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -43,7 +46,8 @@ public class WalletService {
         Wallet wallet = Wallet.builder()
                 .user(user)
                 .name(request.name())
-                .availableFunds(BigDecimal.ZERO)
+                .availableFunds(request.availableFunds())
+                .activeTrades(request.activeTrades())
                 .build();
 
         walletRepository.save(wallet);
@@ -117,5 +121,18 @@ public class WalletService {
         wallet.setAvailableFunds(walletFunds.subtract(transactionCost));
 
         return wallet;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Wallet> getWallets(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::userNotFoundException);
+
+        return walletRepository.findAllByUser(user);
+    }
+
+    public Wallet getWallet(Long walletId){
+        return walletRepository.findById(walletId)
+                .orElseThrow(() -> createWalletNotFoundException(walletId));
     }
 }
