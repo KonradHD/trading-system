@@ -32,7 +32,7 @@ export const StockPage = () => {
                 {symbols.map((item) => (
                     <Link
                         key={item.symbol}
-                        to={`/stock/${item.symbol}`}
+                        to={`${item.symbol}`}
                         className="symbol-card"
                     >
                         <strong className="symbol-name">{item.symbol}</strong>

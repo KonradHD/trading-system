@@ -2,17 +2,22 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../services/api";
 import type { DisplayableProfile } from "../../services/Types";
 import "./ProfilePage.css";
+import {useAuth} from "../../services/AuthProvider.tsx";
 
 export const ProfilePage = () => {
     const [profile, setProfile] = useState<DisplayableProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { token } = useAuth();
 
     useEffect(() => {
+        if (!token) return;
+
         fetch(`${API_URL}/profile`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             credentials: "include"
         })
@@ -25,7 +30,7 @@ export const ProfilePage = () => {
             .then((data) => setProfile(data))
             .catch((err) => setError(err.message))
             .finally(() => setLoading(false));
-    }, []);
+    }, [token]);
 
     if (loading) {
         return <section className="profile-loading-state">Loading profile...</section>;
